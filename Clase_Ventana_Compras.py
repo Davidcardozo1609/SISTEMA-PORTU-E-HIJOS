@@ -46,7 +46,7 @@ class Compras(Clase_Plantilla):
         
         #Fr_Gris (ayuda a hacer el borde)
         self.Fr_help_compras = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
-        self.Fr_help_compras.place(relx=0.1, rely=0.4, relwidth=0.8, relheight=0.4)
+        self.Fr_help_compras.place(relx=0.05, rely=0.43, relwidth=0.8, relheight=0.4)
         
         #Fr_Blanco el principal
         self.Fr_blanco_compras = ctk.CTkFrame(self.Fr_help_compras,
@@ -61,7 +61,7 @@ class Compras(Clase_Plantilla):
         self.Fr_help_proveedor = ctk.frame = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
 
 
-        self.Fr_help_proveedor.place(relx=0.05, rely=0.2, relwidth=0.35,relheight=0.07)
+        self.Fr_help_proveedor.place(relx=0.05, rely=0.2, relwidth=0.3,relheight=0.07)
 
         #Fr_Blanco de Proveedores
 
@@ -69,7 +69,7 @@ class Compras(Clase_Plantilla):
                                                 fg_color="#ffffff" 
                                                 )
         
-        self.Fr_blanco_proveedor.place(relx=0.01, rely=0.02, relwidth=0.98, relheight=0.96)
+        self.Fr_blanco_proveedor.place(relx=0.01, rely=0.04, relwidth=0.98, relheight=0.89)
 
 
         
@@ -79,7 +79,7 @@ class Compras(Clase_Plantilla):
         # Crear la tabla
         self.crear_tabla(
             self.Fr_blanco_compras,  # frame donde irá la tabla
-             columnas=["Producto","Categoria","Cantidad","Precio_Unitario","Subtotal"],
+             columnas=["Producto","Categoria","Cantidad","Precio Unitario","Subtotal"],
             con_acciones=True
 
         )
@@ -96,7 +96,7 @@ class Compras(Clase_Plantilla):
             hover_color="blue",
             font=("Arial", 20),
             command=self.guardar_compra)
-        self.btn_guardar.place(relx=0.1, rely=0.92, relwidth=0.2, relheight=0.07)
+        self.btn_guardar.place(relx=0.1, rely=0.85, relwidth=0.2, relheight=0.07)
         
         #Boton cancelar
         self.btn_cancelar = ctk.CTkButton(
@@ -107,7 +107,7 @@ class Compras(Clase_Plantilla):
             font=("Arial", 20),
             command=self.Cancelar
         )
-        self.btn_cancelar.place(relx=0.32, rely=0.93, relwidth=0.18, relheight=0.06)
+        self.btn_cancelar.place(relx=0.32, rely=0.85, relwidth=0.18, relheight=0.07)
         
         self.btn_agregar = ctk.CTkButton(
             self.Fr_Principal,
@@ -117,7 +117,7 @@ class Compras(Clase_Plantilla):
             font=("Arial", 24),
             command=self.abrir_menu_agregar
         )
-        self.btn_agregar.place(relx=0.6, rely=0.22, relwidth=0.15, relheight=0.063)
+        self.btn_agregar.place(relx=0.6, rely=0.35, relwidth=0.15, relheight=0.063)
         
     def crear_combobox(self):
         query = ("""SELECT nombre FROM proveedores""")
@@ -129,7 +129,7 @@ class Compras(Clase_Plantilla):
         self.cmb_proveedor = ctk.CTkOptionMenu(self.Fr_blanco_proveedor,
                                                values=self.pro if self.pro else [""],
                                                corner_radius=6,  # bordes redondeados
-                                               font=("Arial", 16, "bold"),
+                                               font=("Arial", 15, "bold"),
                                                fg_color="#fdfdfd",  # Fondo gris claro tipo placeholder
                                                button_color="#fdfdfd",# color del botón de la flecha
                                                button_hover_color="#fdfdfd",# color del botón cuando el mouse pasa encima
@@ -138,7 +138,7 @@ class Compras(Clase_Plantilla):
                                                dropdown_hover_color="#e5e5e5", # color al pasar sobre una opción
                                                dropdown_text_color="black"   # color del texto en el menú desplegable
                                           )
-        self.cmb_proveedor.set("Seleccionar proveedor")
+        self.cmb_proveedor.set("Seleccionar Proveedor")
         
         self.cmb_proveedor.bind("<FocusIn>", self.on_focus)
         self.cmb_proveedor.bind("<FocusOut>", self.on_focus_out)
@@ -151,27 +151,46 @@ class Compras(Clase_Plantilla):
         
         #Label Titulo
         self.Lbl_nombre_modulo.configure(text="Compras")
-        self.Lbl_nombre_modulo.place(relx=0,rely=0.03,relwidth=0.25,relheight=0.1)
+        self.Lbl_nombre_modulo.place(relx=0.05,rely=0.03,relwidth=0.18,relheight=0.1)
         #label total
         self.lbl_total = ctk.CTkLabel(self.Fr_Principal,
-                                      bg_color="#e74c3c",
+                                      bg_color="#ffffff",
                                       fg_color="white",
                                       font=("Arial", 25, "bold"),
                                       text="Total: $0.00")
-        self.lbl_total.place(relx=0.65, rely=0.92, relwidth=0.25,relheight=0.05)
+        self.lbl_total.place(relx=0.65, rely=0.85, relwidth=0.25,relheight=0.05)
         
         #label proveedor
         self.lbl_proveedor = ctk.CTkLabel(self.Fr_Principal,
                                       text="Proveedor:",
                                       text_color="black",
                                       fg_color="white",
-                                      font=("Arial", 17, "bold"))
-        self.lbl_proveedor.place(relx=0.1, rely=0.15,relwidth=0.1,relheight=0.05)
+                                      font=("Arial", 18, "bold"))
+        self.lbl_proveedor.place(relx=0.05, rely=0.15,relwidth=0.1,relheight=0.05)
+
+        #label busqueda
+        self.lbl_busqueda = ctk.CTkLabel(self.Fr_Principal,
+                                      text="Busqueda de productos",
+                                      text_color="black",
+                                      fg_color="white",
+                                      font=("Arial", 18, "bold"))
+        self.lbl_busqueda.place(relx=0.05, rely=0.3,relwidth=0.22,relheight=0.05)
 
 #__________________________STRINGVARS___________________________________
         # Variable para guardar la opción seleccionada
         self.opcion_seleccionada = ctk.StringVar(value="Seleccione proveedor")
         self.entrada_var_producto = ctk.StringVar()
+
+
+#__________________________ENTRYS___________________________________     
+
+        self.entry_busqueda = ctk.CTkEntry(self.Fr_Principal,
+                                           border_color="#eaeaea",
+                                           fg_color="#ffffff",
+                                           placeholder_text="Ingrese el nombre del producto")
+
+        self.entry_busqueda.place(relx=0.05,rely=0.35,relwidth=0.4,relheight=0.06)
+
 
         
 #__________________________FUNCIONES___________________________________
@@ -283,7 +302,7 @@ class Compras(Clase_Plantilla):
             "Producto": self.entry_producto.get(),
             "Categoria": self.entry_categoria.get(),
             "Cantidad": self.entry_cantidad.get(),
-            "Precio_Unitario": self.entry_precio_unitario.get(),
+            "Precio Unitario": self.entry_precio_unitario.get(),
             "Subtotal": cantidad*precio
         }
         if not all(datos.values()):
@@ -308,11 +327,13 @@ class Compras(Clase_Plantilla):
         elif not datos["Cantidad"]:
             ms.showwarning("Atención", "Por favor, complete el campo Cantidad", parent=self.ventana_menu)
             return
-        elif not datos["Precio_Unitario"]:
+        elif not datos["Precio Unitario"]:
             ms.showwarning("Atención", "Por favor, complete el campo Precio", parent=self.ventana_menu)
             return
         else:
             self.agregar_fila(datos)
+
+
             self.actualizar_total()
             
             ms.showinfo("Exito","Datos ingresados correctamente",parent=self.ventana)
@@ -359,7 +380,7 @@ class Compras(Clase_Plantilla):
                     "Producto": valores[0],
                     "Categoria": valores[1],
                     "Cantidad": valores[2],
-                    "Precio_Unitario": valores[3],
+                    "Precio Unitario": valores[3],
                     "Subtotal": valores[4]
                 }
 
@@ -373,40 +394,40 @@ class Compras(Clase_Plantilla):
 
                 # Insertar producto
                 self.bd.cursor.execute("""
-                    INSERT INTO compras_proveedor(proveedor_id, producto, categoria, cantidad, precio_unitario, subtotal, fecha)
+                    INSERT INTO compras_proveedor(proveedor_id, producto, categoria, cantidad, Precio Unitario, subtotal, fecha)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """, (
                     id_proveedor,
                     fila_dict["Producto"],
                     fila_dict["Categoria"],
                     fila_dict["Cantidad"],
-                    fila_dict["Precio_Unitario"],
+                    fila_dict["Precio Unitario"],
                     fila_dict["Subtotal"],
                     fecha_actual
                 ))
                 self.bd.cursor.execute("""
-                    INSERT INTO productos_stock(producto, categoria,  cantidad, precio_unitario,subtotal)
+                    INSERT INTO productos_stock(producto, categoria,  cantidad, Precio Unitario,subtotal)
                     VALUES (?, ?, ?, ?, ?)
                 """, (
                     
                     fila_dict["Producto"],
                     fila_dict["Categoria"],
                     fila_dict["Cantidad"],
-                    fila_dict["Precio_Unitario"],
+                    fila_dict["Precio Unitario"],
                     fila_dict["Subtotal"]
                   
                 ))
                 
                 
                 self.bd.cursor.execute("""
-                    INSERT INTO detalle_compras(compra_id, producto, categoria, cantidad, precio_unitario, subtotal)
+                    INSERT INTO detalle_compras(compra_id, producto, categoria, cantidad, Precio Unitario, subtotal)
                     VALUES (?, ?, ?, ?, ?, ?)
                 """, (
                     compra_id,
                     fila_dict["Producto"],
                     fila_dict["Categoria"],
                     fila_dict["Cantidad"],
-                    fila_dict["Precio_Unitario"],
+                    fila_dict["Precio Unitario"],
                     fila_dict["Subtotal"]
                 ))
                 

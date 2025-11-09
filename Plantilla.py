@@ -84,8 +84,8 @@ class Clase_Plantilla():
         
         #ESTILOS
     def configurar_estilos(self):
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("dark-blue")
+        ctk.set_appearance_mode("light")
+        ctk.set_default_color_theme("blue")
 
 
         
@@ -113,18 +113,14 @@ class Clase_Plantilla():
             text="Portu E Hijos S.R.L.",
             text_color="white",
             fg_color="#0d3139",
-            font=("Arial", 40),
+            font=("Arial", 35),
             anchor="w",
-            wraplength=300,   # ancho máximo antes de saltar línea
+            wraplength=250,   # ancho máximo antes de saltar línea
             justify="center"
         )
 
         
-        self.Nombre_empresa.pack(fill="x")
-      # ---------------- LINEA DIVISORIA ----------------
-        ctk.CTkFrame(self.Fr_costado, fg_color="white", height=2).pack(fill="x", pady=5)
-        
-
+        self.Nombre_empresa.pack(fill="x", pady=(30,20),padx=(30,15))
 
         self.Inicio=ctk.CTkButton(self.Fr_costado,
                                   text=" Inicio",
