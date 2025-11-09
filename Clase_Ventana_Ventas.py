@@ -253,17 +253,12 @@ class Ventas(Clase_Plantilla):
                                                                                
             self.bd.cursor.execute ("""
                     
-                    
             INSERT INTO ventas (productos, cantidad, precio, tipo_pago, pago) VALUES (?,?,?,?,?)
                         
             """, (self.valor[0], self.valor[1], self.valor[2], self.valor[3], self.valor[4]))
             
         
-            
-           
-                
-                 
-            
+
                   
             self.bd.cursor.execute("""
             UPDATE productos_stock SET cantidad = ? WHERE id = ?""",

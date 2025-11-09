@@ -35,6 +35,8 @@ if __name__ == "__main__":
     #Este es un hilo que ejecuta una funcion mientras el programa este abierto
     t.start()
     #lo iniciaz
+
+    
     
     app = GestorVentanas.abrir(Ventana_Login,master=None)  # raíz principalx
     

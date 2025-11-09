@@ -59,7 +59,7 @@ class Registro_Ventas(Clase_Plantilla):
         # Crear la tabla
         self.crear_tabla(
             self.Fr_blanco_compras,  # frame donde irá la tabla
-            columnas=["ID", "Proveedor","Fecha","Total"],
+            columnas=["ID", "Clientes","Fecha","Total"],
             con_acciones=True,
             detalles=True
 
@@ -69,7 +69,7 @@ class Registro_Ventas(Clase_Plantilla):
         
 
         #Label Titulo
-        self.Lbl_nombre_modulo.configure(text="Registro de Compras")
+        self.Lbl_nombre_modulo.configure(text="Registro de Ventas")
         self.Lbl_nombre_modulo.place(relx=0.1,rely=0.03,relwidth=0.35,relheight=0.1)
         
         self.tree.bind("<Button-1>", self.click_en_tabla)
@@ -83,8 +83,7 @@ class Registro_Ventas(Clase_Plantilla):
             hover_color="blue",
             font=("Arial", 20),
             command=lambda: self.ir_a_pantalla_x(
-                                   __import__("Clase_Ventana_Compras").Compras,  # 👈 import diferido
-
+                                   __import__("Clase_Ventana_Ventas").Ventas,  # 👈 import diferido
                                    master=self.ventana,
                                    ventana_padre=self,
                                    ventana_login=self.ventana_login,
@@ -103,7 +102,7 @@ class Registro_Ventas(Clase_Plantilla):
             self.tree.delete(fila)
             
         self.bd.cursor.execute(
-        """SELECT id, proveedor, fecha, total FROM registro_compras"""
+        """SELECT id, clientes, fecha, total FROM registro_ventas"""
         
         )
         resultado = self.bd.cursor.fetchall()
@@ -113,38 +112,6 @@ class Registro_Ventas(Clase_Plantilla):
             valores += ["Detalles","Editar", "Eliminar"]  # Añadimos botones de acción
             self.tree.insert("", "end", values=valores)
             
-    def ventana_detalles(self, fila_id):
-        compra_id = fila_id[0]  # el id de la compra
-
-        # Crear ventana secundaria
-        self.ventana_menu = ctk.CTkToplevel(self.ventana)
-        self.ventana_menu.title(f"Detalles de la compra #{compra_id}")
-        self.ventana_menu.geometry("700x400")
-        self.ventana_menu.resizable(False, False)
-        self.ventana_menu.grab_set()
-
-        # Encabezado
-        titulo = ctk.CTkLabel(self.ventana_menu, text=f"Detalles de la compra #{compra_id}", font=("Arial", 18, "bold"))
-        titulo.pack(pady=10)
-
-        # Crear tabla
-        self.crear_tabla(
-            self.ventana_menu,
-            columnas=["Producto", "Categoría", "Cantidad", "Precio_Unitario", "Subtotal"],
-            con_acciones=False,
-        )
-
-        # Consulta SQL CORRECTA (coma entre columnas)
-        self.bd.cursor.execute("""
-            SELECT producto, categoria, cantidad, precio_unitario, subtotal
-            FROM detalle_compras
-            WHERE compra_id = ?
-        """, (compra_id,))
-        resultado = self.bd.cursor.fetchall()
-
-        # Insertar filas en la tabla
-        for fila in resultado:
-            self.tree.insert("", "end", values=fila)
             
     def click_en_tabla(self, event):
         item = self.tree.identify_row(event.y)
@@ -163,14 +130,14 @@ class Registro_Ventas(Clase_Plantilla):
             
     def ventana_detalles(self, fila_id):
         try:
-            compra_id = fila_id[0]
+            venta_id = fila_id[0]
         except (IndexError, TypeError):
             ms.showwarning("Aviso", "No se seleccionó ninguna compra.")
             return
 
         # Crear ventana independiente
         ventana_detalle = ctk.CTkToplevel(self.ventana)
-        ventana_detalle.title(f"Detalles de compra #{compra_id}")
+        ventana_detalle.title(f"Detalles de Ventas #{venta_id}")
         ventana_detalle.geometry("700x400")
         ventana_detalle.resizable(False, False)
         ventana_detalle.grab_set()
@@ -179,7 +146,7 @@ class Registro_Ventas(Clase_Plantilla):
         frame_tabla = ctk.CTkFrame(ventana_detalle)
         frame_tabla.pack(fill="both", expand=True, padx=10, pady=10)
 
-        columnas = ["Producto", "Categoría", "Cantidad", "Precio Unitario", "Subtotal"]
+        columnas = ["Producto", "Categoría", "Cantidad", "Tipo Pago", "Subtotal"]
         tree = ttk.Treeview(frame_tabla, columns=columnas, show="headings", height=10)
         for col in columnas:
             tree.heading(col, text=col)
@@ -189,13 +156,13 @@ class Registro_Ventas(Clase_Plantilla):
         # Consultar los datos de la compra
         self.bd.cursor.execute("""
             SELECT producto, categoria, cantidad, precio_unitario, subtotal
-            FROM detalle_compras
+            FROM detalle_ventas
             WHERE compra_id = ?
-        """, (compra_id,))
+        """, (venta_id,))
         resultado = self.bd.cursor.fetchall()
 
         if not resultado:
-            ms.showinfo("Detalles", "No hay detalles para esta compra.")
+            ms.showinfo("Detalles", "No hay detalles para esta Venta.",)
             return
 
         for fila in resultado:

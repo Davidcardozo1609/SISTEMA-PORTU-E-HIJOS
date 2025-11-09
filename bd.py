@@ -27,21 +27,70 @@ class BaseDeDatos:
         """Crea todas las tablas en una base de datos vacía."""
         conn = sqlcon.connect(ruta)
         cursor = conn.cursor()
+
+        #_____________________________PROVEEDOR____________________________#
+
         cursor.execute("""CREATE TABLE IF NOT EXISTS proveedores (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
             telefono TEXT NOT NULL,
             direccion TEXT NOT NULL
         )""")
+
+         #____________________________CLIENTES____________________#
+
+
+        cursor.execute("""CREATE TABLE IF NOT EXISTS clientes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT,
+            apellido TEXT,
+            dni TEXT,
+            email TEXT,
+            telefono TEXT
+        )""")
+
+        #_____________________________VENTAS_______________________________#
+
         cursor.execute("""CREATE TABLE IF NOT EXISTS ventas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             productos TEXT NOT NULL,
             cantidad INT NOT NULL,
             precio INT NOT NULL,
             tipo_pago TEXT NOT NULL,
-            subtotal INT NOT NULL,
-            total INT NOT NULL
+            pago INT NOT NULL
         )""")
+
+
+        #_____________________________REGISTRO DE VENTAS_______________________________#
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS registro_ventas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                clientes_id INTEGER NOT NULL,
+                clientes TEXT NOT NULL,
+                fecha TEXT NOT NULL,
+                total REAL NOT NULL,
+                FOREIGN KEY (clientes_id) REFERENCES clientes(id)
+            );
+            """)
+        
+        #_____________________________DETALLES DE LA VENTA_____________________________#
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS detalle_ventas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                venta_id INTEGER NOT NULL,
+                productos TEXT NOT NULL,
+                cantidad INT NOT NULL,
+                precio INT NOT NULL,
+                tipo_pago TEXT NOT NULL,
+                subtotal INT NOT NULL,
+                FOREIGN KEY (venta_id) REFERENCES registro_ventas(id)
+            );
+            """)
+        
+        #_____________________________COMPRAS_______________________________#
+
+
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS compras_proveedor (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,7 +105,7 @@ class BaseDeDatos:
         );
         """)
 
-        # Tabla para registrar la compra
+        #____________________________REGISTRO DE COMPRAS_______________________#
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS registro_compras (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,6 +116,10 @@ class BaseDeDatos:
                 FOREIGN KEY (proveedor_id) REFERENCES proveedores(id)
             );
             """)
+        
+
+         #____________________________DETALLES DE LAS COMPRAS______________________#
+
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS detalle_compras (
@@ -80,7 +133,8 @@ class BaseDeDatos:
                 FOREIGN KEY (compra_id) REFERENCES registro_compras(id)
             );
             """)
-
+        
+         #____________________________EVENTOS_____________________________________#
 
         cursor.execute("""CREATE TABLE IF NOT EXISTS eventos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -105,23 +159,7 @@ class BaseDeDatos:
             precio_unitario REAL NOT NULL,
             subtotal REAL NOT NULL
         )""")
-        cursor.execute("""CREATE TABLE IF NOT EXISTS clientes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT,
-            apellido TEXT,
-            dni TEXT,
-            email TEXT,
-            telefono TEXT
-        )""")
-        cursor.execute("""CREATE TABLE IF NOT EXISTS registro_ventas (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fecha TEXT,
-            producto TEXT,
-            cantidad INTEGER,
-            precio REAL,
-            precio_compra REAL,
-            total REAL
-        )""")
+        
         conn.commit()
         conn.close()
 
