@@ -165,7 +165,7 @@ class Registro_Compras(Clase_Plantilla):
         try:
             compra_id = fila_id[0]
         except (IndexError, TypeError):
-            messagebox.showwarning("Aviso", "No se seleccionó ninguna compra.")
+            ms.showwarning("Aviso", "No se seleccionó ninguna compra.")
             return
 
         # Crear ventana independiente
@@ -195,7 +195,7 @@ class Registro_Compras(Clase_Plantilla):
         resultado = self.bd.cursor.fetchall()
 
         if not resultado:
-            messagebox.showinfo("Detalles", "No hay detalles para esta compra.")
+            ms.showinfo("Detalles", "No hay detalles para esta compra.")
             return
 
         for fila in resultado:
