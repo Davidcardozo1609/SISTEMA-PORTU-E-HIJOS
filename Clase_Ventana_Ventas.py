@@ -46,6 +46,10 @@ class Ventas(Clase_Plantilla):
         
         #Che tomi hay una funcion que vos le pasas los encabezados y los datos y te crea la tabla xd
         #Hola.comentario.dearriba.Lamento.informartequeyo.no.voyahacer.eso.Porfavor.matese.
+        #Bueno, yo sigo  vivo y sin intencion de matarme, pero cuando vi tu codigo cambie de opinion, por favor matese usted tambien
+        #aun que supongo que ya lo haces diariamente, mlem? todo llamado tan igual y no te dice que hace
+        #en un mundo del reves serias un programado que es feliz y escribe codigo legible. pero es tu maldicion
+        #y hacer codigo asi supongo que es tu manera de compartirla 
         
         
         
@@ -82,6 +86,7 @@ class Ventas(Clase_Plantilla):
         
         self.er.geometry ('250x250')
 #         Trata.bien.a.la.sub.ventana.ella.nacio.hace.poco.
+
         self.er.title ("soy.una.sub.ventana.tratame.bien.")
         self.er.grab_set()
         query = ("""SELECT producto FROM productos_stock""")
@@ -160,17 +165,12 @@ class Ventas(Clase_Plantilla):
         
             self.lista_mlem.append(self.li)
         
-        
-       
-        
-            
-            
-            
-            
+
 
         if producto ==  self.mle[0]:
             ms.showerror("Repeticion","producto ya colocado", parent = self.er)
             return
+        
         query = ("""SELECT cantidad FROM productos_stock WHERE producto =  ?""")
         data = (producto,)
         consulta1 = self.bd.cursor.fetchone()[0]
@@ -256,7 +256,13 @@ class Ventas(Clase_Plantilla):
             INSERT INTO ventas (productos, cantidad, precio, tipo_pago, pago) VALUES (?,?,?,?,?)
                         
             """, (self.valor[0], self.valor[1], self.valor[2], self.valor[3], self.valor[4]))
-            
+
+
+            self.bd.cursor.execute ("""
+                    
+            INSERT INTO registro_ventas (ID, cantidad, precio, tipo_pago, pago) VALUES (?,?,?,?,?)
+                        
+            """, (self.valor[0], self.valor[1], self.valor[2], self.valor[3], self.valor[4]))
         
 
                   
