@@ -44,15 +44,7 @@ class Ventas(Clase_Plantilla):
         self.mlem = ttk.Treeview (self.frame_recibo)
         self.mlem["column"] = ( "producto", "cantidad", "precio", "tipo de pago", "pago","id")
         
-        #Che tomi hay una funcion que vos le pasas los encabezados y los datos y te crea la tabla xd
-        #Hola.comentario.dearriba.Lamento.informartequeyo.no.voyahacer.eso.Porfavor.matese.
-        #Bueno, yo sigo  vivo y sin intencion de matarme, pero cuando vi tu codigo cambie de opinion, por favor matese usted tambien
-        #aun que supongo que ya lo haces diariamente, mlem? todo llamado tan igual y no te dice que hace
-        #en un mundo del reves serias un programado que es feliz y escribe codigo legible. pero es tu maldicion
-        #y hacer codigo asi supongo que es tu manera de compartirla 
-        
-        
-        
+ 
         self.mlem.pack (fill="both", expand = True)
         self.mlem.column ("#0", width = 0, stretch="no")
       
@@ -85,7 +77,6 @@ class Ventas(Clase_Plantilla):
         self.er = ctk.CTkToplevel(self.ventana)
         
         self.er.geometry ('250x250')
-#         Trata.bien.a.la.sub.ventana.ella.nacio.hace.poco.
 
         self.er.title ("soy.una.sub.ventana.tratame.bien.")
         self.er.grab_set()
@@ -134,7 +125,7 @@ class Ventas(Clase_Plantilla):
         ml = self.opcion_metodo_pago.get()
         print (ml)
       
-#   Somos.lasfuncionesysolohacemossufrir alquenosuse.
+
     def robar_datos(self):
      
         
@@ -143,41 +134,16 @@ class Ventas(Clase_Plantilla):
         
         precio = self.entry_precio.get()
         tipo_pago = self.opcion_metodo_pago.get()
-        pago = int(cantidad) * int(precio)
-        print (producto)
-        print (cantidad)
-        print (precio)
-        print (tipo_pago)
-        self.lista_mlem =[]
-        for fila in self.mlem.get_children():
-            self.mle = self.mlem.item (fila,"values")
-            self.li = {
-               
-                "producto": self.mle[0],
-                "cantidad":self.mle[1],
-                "precio": self.mle[2],
-                "tipo de pago": self.mle[3],
-                "pago": self.mle[4]
-                
-               
-                
-                }
-        
-            self.lista_mlem.append(self.li)
         
 
 
-        if producto ==  self.mle[0]:
-            ms.showerror("Repeticion","producto ya colocado", parent = self.er)
-            return
-        
         query = ("""SELECT cantidad FROM productos_stock WHERE producto =  ?""")
         data = (producto,)
         consulta1 = self.bd.cursor.fetchone()[0]
         consulta_int = int(consulta1)
         self.bd.cursor.execute(query,data)
-        
-      
+
+
         if int(cantidad)>consulta_int:
             ms.showerror ("error""La cantidad que haz intentado colocar es mayor que la cantidad actual")
             return
@@ -188,6 +154,35 @@ class Ventas(Clase_Plantilla):
         elif not precio:
             ms.showerror ("Faltante", "Falta colocar el precio")
             return
+        
+        pago = int(cantidad) * precio
+
+
+        self.lista_mlem =[]
+        for fila in self.mlem.get_children():
+            self.mle = self.mlem.item (fila,"values")
+            self.li = {
+               
+                "producto": self.mle[0],
+                "cantidad":self.mle[1],
+                "precio": self.mle[2],
+                "tipo de pago": self.mle[3],
+                "pago": self.mle[4]
+
+                }
+        
+            self.lista_mlem.append(self.li)
+        
+
+
+        if producto ==  self.mle[0]:
+            ms.showerror("Repeticion","producto ya colocado", parent = self.er)
+            return
+        
+        
+        
+      
+        
     
         
      

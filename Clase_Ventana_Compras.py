@@ -8,7 +8,7 @@ from bd import BaseDeDatos
 from Plantilla import Clase_Plantilla
 import customtkinter as ctk
 import tkinter as tk 
-from tksheet import Sheet #permite hacer la tabla
+from tksheet import Sheet #permier la tablate hac
 from datetime import datetime
 from tkinter import ttk
 from Clase_Gestor_Ventanas import GestorVentanas
