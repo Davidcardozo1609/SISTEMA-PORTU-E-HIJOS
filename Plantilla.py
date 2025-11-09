@@ -515,7 +515,7 @@ class Clase_Plantilla():
         
         self.Lbl_nombre_modulo=ctk.CTkLabel(self.Fr_Principal,
                                             text="Menu Principal",
-                                            font=("Segoe UI", 30, "bold"),
+                                            font=("Segoe UI", 40, "bold"),
                                             text_color="#333",
                                             fg_color="white")
         

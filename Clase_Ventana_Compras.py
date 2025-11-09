@@ -8,7 +8,6 @@ from bd import BaseDeDatos
 from Plantilla import Clase_Plantilla
 import customtkinter as ctk
 import tkinter as tk 
-from tksheet import Sheet #permier la tablate hac
 from datetime import datetime
 from tkinter import ttk
 from Clase_Gestor_Ventanas import GestorVentanas
@@ -31,24 +30,48 @@ class Compras(Clase_Plantilla):
                  ventana_login=ventana_login,
                  usuario_actual=usuario_actual,
                  parent_app=parent_app)
-        
-
-        self.bd = BaseDeDatos()
                 #MUY IMPORTANTE: Llama al init de plantilla permitiendo tener las cosas de plantilla
                 #Labels,Entrys,Frames,etc. Pero plantilla para ejecutar eso necesita que le pases
                 #las cosas entre (), entonces lo que hacemos es pasarle las cosas de nuestro init a plantilla
+        
+
+        self.bd = BaseDeDatos()
+
+
+
+    
+               
         
 #_______________________________FRAMES_____________________________________
         
         #Fr_Gris (ayuda a hacer el borde)
         self.Fr_help_compras = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
-        self.Fr_help_compras.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.6)
+        self.Fr_help_compras.place(relx=0.1, rely=0.4, relwidth=0.8, relheight=0.4)
         
         #Fr_Blanco el principal
         self.Fr_blanco_compras = ctk.CTkFrame(self.Fr_help_compras,
                                                 fg_color="#ffffff" 
                                                 )
         self.Fr_blanco_compras.place(relx=0.002, rely=0.002, relwidth=0.996, relheight=0.996)
+
+
+
+        #Fr_Gris Proveedores
+
+        self.Fr_help_proveedor = ctk.frame = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
+
+
+        self.Fr_help_proveedor.place(relx=0.05, rely=0.2, relwidth=0.35,relheight=0.07)
+
+        #Fr_Blanco de Proveedores
+
+        self.Fr_blanco_proveedor = ctk.CTkFrame(self.Fr_help_proveedor,
+                                                fg_color="#ffffff" 
+                                                )
+        
+        self.Fr_blanco_proveedor.place(relx=0.01, rely=0.02, relwidth=0.98, relheight=0.96)
+
+
         
         self.crear_combobox()
 
@@ -94,7 +117,7 @@ class Compras(Clase_Plantilla):
             font=("Arial", 24),
             command=self.abrir_menu_agregar
         )
-        self.btn_agregar.place(relx=0.1, rely=0.22, relwidth=0.15, relheight=0.063)
+        self.btn_agregar.place(relx=0.6, rely=0.22, relwidth=0.15, relheight=0.063)
         
     def crear_combobox(self):
         query = ("""SELECT nombre FROM proveedores""")
@@ -103,7 +126,7 @@ class Compras(Clase_Plantilla):
         self.pro = [fila[0] for fila in self.pro]  
         print (self.pro)
         
-        self.cmb_proveedor = ctk.CTkOptionMenu(self.Fr_Principal,
+        self.cmb_proveedor = ctk.CTkOptionMenu(self.Fr_blanco_proveedor,
                                                values=self.pro if self.pro else [""],
                                                corner_radius=6,  # bordes redondeados
                                                font=("Arial", 16, "bold"),
@@ -122,13 +145,13 @@ class Compras(Clase_Plantilla):
         
         
         
-        self.cmb_proveedor.place(relx=0.20, rely=0.15, relwidth=0.23,relheight=0.06)
+        self.cmb_proveedor.place(relx=0, rely=0, relwidth=1,relheight=1)
         
 #__________________________LABELS___________________________________
         
         #Label Titulo
         self.Lbl_nombre_modulo.configure(text="Compras")
-        self.Lbl_nombre_modulo.place(relx=0.1,rely=0.03,relwidth=0.25,relheight=0.1)
+        self.Lbl_nombre_modulo.place(relx=0,rely=0.03,relwidth=0.25,relheight=0.1)
         #label total
         self.lbl_total = ctk.CTkLabel(self.Fr_Principal,
                                       bg_color="#e74c3c",
@@ -142,7 +165,7 @@ class Compras(Clase_Plantilla):
                                       text="Proveedor:",
                                       text_color="black",
                                       fg_color="white",
-                                      font=("Arial", 16, "bold"))
+                                      font=("Arial", 17, "bold"))
         self.lbl_proveedor.place(relx=0.1, rely=0.15,relwidth=0.1,relheight=0.05)
 
 #__________________________STRINGVARS___________________________________
