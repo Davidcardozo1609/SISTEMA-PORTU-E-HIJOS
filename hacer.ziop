@@ -1,0 +1,25 @@
+import zipfile
+import os
+
+# Carpeta donde están todos los archivos
+carpeta = "musica/probando"
+
+# Nombre del zip
+nombre_zip = "MB_LENCERIA"
+
+# Lista de archivos que querés agregar
+archivos = [
+    "Archivo_ejecutar.py","Archivo_Ventana_Base.py","bd.py","Clase_Calendario.py",
+    "Clase_Editar_Cliente.py","Clase_Editar_Producto.py","Clase_Registro_Calendario.py",
+    "Clase_Ventana_Clientes.py","Clase_Ventana_Compras.py","Clase_Ventana_Login.py",
+    "Clase_Ventana_Pantalla_Principal.py","Clase_Ventana_Registro.py","Clase_Ventana_Registro_Ventas.py",
+    "Clase_Ventana_Stock.py","Clase_Ventana_Ventas.py","Constantes.py",
+    "imagen_contra.jpeg","imagen_mostrar_contra.jpeg","logo.png","MB.icon",
+    "PANTALLA PRINCIPAL.png","STOCK.png","Ventas.png"
+]
+
+with zipfile.ZipFile(nombre_zip, 'w') as zipf:
+    for archivo in archivos:
+        zipf.write(os.path.join(carpeta, archivo), arcname=archivo)
+
+print(f"{nombre_zip} creado exitosamente.")
