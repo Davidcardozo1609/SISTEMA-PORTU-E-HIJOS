@@ -117,7 +117,7 @@ class Calendario(Clase_Plantilla):
         )
         
         # Inicial: mostrar eventos de hoy (si hay)
-        self._refrescar_lista_para_fecha(hoy)
+        self.actualizar_tabla(hoy)
         
         
     def _fecha_seleccion_obj(self):
