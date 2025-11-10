@@ -265,6 +265,7 @@ class Ventas(Clase_Plantilla):
             data= (self.valor[0],)
             
             self.bd.cursor.execute(query,data)
+         
             mleem = self.bd.cursor.fetchone()[0]
             
             
@@ -272,15 +273,11 @@ class Ventas(Clase_Plantilla):
             print ("como.siempre.soy.un.print.inutil", mamayo)
             for ml in self.listae:
                 print ("el.total.es:", sum(self.listae))
-                
-                
-                                                                               
-            self.bd.cursor.execute ("""
-                    
-                    
-            INSERT INTO ventas (productos, cantidad, precio, tipo_pago) VALUES (?,?,?,?)
-                        
-            """, (self.valor[0], self.valor[1], self.valor[2], self.valor[3]))
+                self.bd.cursor.execute ("""
+                                        INSERT INTO ventas (productos, cantidad, precio, tipo_pago,pago)
+                                         VALUES (?,?,?,?,?)
+                                        """, (self.valor[0], self.valor[1], self.valor[2], self.valor[3],self.valor[4])
+                                        )
 
             
                   
@@ -307,9 +304,11 @@ class Ventas(Clase_Plantilla):
          self.bd.cursor.execute ("""
                     
                     
-            INSERT INTO registro_ventas (ventas_id, fecha, total) VALUES (?,?,?,?)
+            INSERT INTO registro_ventas (ventas_id, fecha, total) VALUES (?,?,?)
                         
             """, (id_generado,fecha_actual,mlem))
+
+         self.bd.conexion.commit()
 
 
          
