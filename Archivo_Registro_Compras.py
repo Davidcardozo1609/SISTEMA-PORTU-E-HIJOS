@@ -44,7 +44,7 @@ class Registro_Compras(Clase_Plantilla):
         
         #Fr_Gris (ayuda a hacer el borde)
         self.Fr_help_compras = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
-        self.Fr_help_compras.place(relx=0.1, rely=0.2, relwidth=0.8, relheight=0.65)
+        self.Fr_help_compras.place(relx=0.1, rely=0.15, relwidth=0.8, relheight=0.65)
         
         #Fr_Blanco el principal
         self.Fr_blanco_compras = ctk.CTkFrame(self.Fr_help_compras,
@@ -70,7 +70,7 @@ class Registro_Compras(Clase_Plantilla):
 
         #Label Titulo
         self.Lbl_nombre_modulo.configure(text="Registro de Compras")
-        self.Lbl_nombre_modulo.place(relx=0.1,rely=0.03,relwidth=0.35,relheight=0.1)
+        self.Lbl_nombre_modulo.place(relx=0.1,rely=0.03,relwidth=0.4,relheight=0.1)
         
         self.tree.bind("<Button-1>", self.click_en_tabla)
         
@@ -93,7 +93,7 @@ class Registro_Compras(Clase_Plantilla):
             ))
         
         
-        self.Compras.place(relx=0.1, rely=0.92, relwidth=0.2, relheight=0.07)
+        self.Compras.place(relx=0.1, rely=0.85, relwidth=0.2, relheight=0.07)
         
         
         

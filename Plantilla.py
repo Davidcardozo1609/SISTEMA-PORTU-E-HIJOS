@@ -822,7 +822,13 @@ class Clase_Plantilla():
             
         for col in self.columnas:
             self.tree.heading(col, text=col, anchor=tk.CENTER)
-            ancho = 120 if col not in ["Detalles","Editar", "Eliminar"] else 80
+            if col not in ["Detalles", "Editar", "Eliminar"]:
+                ancho = 120
+            elif col == "ID":
+                ancho = 20
+            else:
+                ancho = 80
+
             self.tree.column(col, width=ancho, anchor=tk.CENTER)
 
         

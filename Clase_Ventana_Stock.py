@@ -31,31 +31,27 @@ class Productos(Clase_Plantilla):
         
         # Frame de Registro de ventas
        
-        self.Lbl_nombre_modulo.destroy()
+        self.Lbl_nombre_modulo.configure(text="Productos")
+
+        self.Lbl_nombre_modulo.place(relx=0.05,rely=0.03,relwidth=0.2,relheight=0.1)
         
-        self.fr_borde=ctk.CTkFrame(self.Fr_Principal, fg_color="grey")
-        self.fr_borde.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-        
-        #frame principal
-        
-        self.fr_blanco=ctk.CTkFrame(self.fr_borde, fg_color="white")
-        self.fr_blanco.place(relx=0.004, rely=0.004, relwidth=0.992, relheight=0.992)
-        
+
+    
         #Fr_Gris (ayuda a hacer el borde)
-        self.Fr_help_compras = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
-        self.Fr_help_compras.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.6)
+        self.Fr_help_productos = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
+        self.Fr_help_productos.place(relx=0.05, rely=0.2, relwidth=0.9, relheight=0.58)
         
         #Fr_Blanco el principal
-        self.Fr_blanco_compras = ctk.CTkFrame(self.Fr_help_compras,
+        self.Fr_blanco_productos = ctk.CTkFrame(self.Fr_help_productos,
                                                 fg_color="#ffffff" 
                                                 )
-        self.Fr_blanco_compras.place(relx=0.002, rely=0.002, relwidth=0.996, relheight=0.996)
+        self.Fr_blanco_productos.place(relx=0.002, rely=0.002, relwidth=0.996, relheight=0.996)
         
 
 
         
         self.crear_tabla(
-            self.Fr_blanco_compras,  # frame donde irá la tabla
+            self.Fr_blanco_productos,  # frame donde irá la tabla
              columnas=["id", "Producto","Categoria","Cantidad","Precio_Unitario","Subtotal"],
             con_acciones=True
 
@@ -63,21 +59,6 @@ class Productos(Clase_Plantilla):
         
         self.actualizar_tabla()
         
-             
-        
-        
-        # APARTADO DE LABELS  
-        
-        #Titulo de productos
-        
-        self.lbl_producto= ctk.CTkLabel(self.fr_blanco,text="Productos", fg_color="white", anchor="w", text_color="black", font=("carme", 36))
-        self.lbl_producto.place(relx=0.03 ,rely=0.035 ,relwidth=0.5 ,relheight=0.105)
-        
-        # Apartado de Botones
-       
-        
-
-
         
     # Insertar cada fila en el Treeview
     def actualizar_tabla(self):
