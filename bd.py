@@ -138,6 +138,7 @@ class BaseDeDatos:
 
         cursor.execute("""CREATE TABLE IF NOT EXISTS eventos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre_del_evento TEXT,
             hora TEXT,
             fecha TEXT,
             descripcion TEXT

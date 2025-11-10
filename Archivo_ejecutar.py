@@ -1,5 +1,5 @@
 from Clase_Ventana_Login import Ventana_Login
-import threading #Permite ejecutar varias tareas al mismo tiempo dentro del mismo programa
+import threading #Permite ejecutar varias tareas al mismo tiempo dentro del mismo programas
 from recurso import Recursos
 from Constantes import *
 from Clase_Gestor_Ventanas import GestorVentanas
