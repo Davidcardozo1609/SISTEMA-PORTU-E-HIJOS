@@ -306,20 +306,7 @@ class Clase_Plantilla():
                                     ))
         
         self.Compras_Bn.pack(fill="x",padx=30,pady=3)
-        
-        self.categorias_Bn=ctk.CTkButton(self.Fr_bodega_Btns,
-                               text=" Categorias",
-                               fg_color="#0d3139",
-                               image=self.logo_categorias_tk,
-                               compound="left",
-                               anchor="w",
-                               text_color="white",
-                               font=FONT_BTNS_DESPEGABLE)
-        
-        self.categorias_Bn.pack(fill="x",padx=30,pady=3)
 
-        
-        
     def crear_facturacion(self):
 
         self.Fr_facturacion= ctk.CTkFrame(self.Fr_costado, fg_color="#0d3139")
@@ -386,17 +373,7 @@ class Clase_Plantilla():
             )
         self.Clientes_Bn.pack(fill="x",padx=30,pady=3)
         
-        
-        self.Descuento_Bn = ctk.CTkButton(
-            self.Fr_facturacion_Btns,
-            text=" Descuento",
-            fg_color="#0d3139",
-            image=self.logo_descuento_tk,
-            compound="left",
-            anchor="w",
-            text_color="white",
-            font=FONT_BTNS_DESPEGABLE)
-        self.Descuento_Bn.pack(fill="x",padx=30,pady=3)
+    
 
         
         self.Ventas_Bn = ctk.CTkButton(

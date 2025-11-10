@@ -31,6 +31,7 @@ def precargar_recursos():
 
 if __name__ == "__main__":
     
+    
     t = threading.Thread(target=precargar_recursos, daemon=True)
     #Este es un hilo que ejecuta una funcion mientras el programa este abierto
     t.start()

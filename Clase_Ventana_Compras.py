@@ -394,7 +394,7 @@ class Compras(Clase_Plantilla):
 
                 # Insertar producto
                 self.bd.cursor.execute("""
-                    INSERT INTO compras_proveedor(proveedor_id, producto, categoria, cantidad, Precio Unitario, subtotal, fecha)
+                    INSERT INTO compras_proveedor(proveedor_id, producto, categoria, cantidad, precio_unitario, subtotal, fecha)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """, (
                     id_proveedor,
@@ -406,7 +406,7 @@ class Compras(Clase_Plantilla):
                     fecha_actual
                 ))
                 self.bd.cursor.execute("""
-                    INSERT INTO productos_stock(producto, categoria,  cantidad, Precio Unitario,subtotal)
+                    INSERT INTO productos_stock(producto, categoria,  cantidad, precio_unitario,subtotal)
                     VALUES (?, ?, ?, ?, ?)
                 """, (
                     
@@ -420,7 +420,7 @@ class Compras(Clase_Plantilla):
                 
                 
                 self.bd.cursor.execute("""
-                    INSERT INTO detalle_compras(compra_id, producto, categoria, cantidad, Precio Unitario, subtotal)
+                    INSERT INTO detalle_compras(compra_id, producto, categoria, cantidad, precio_unitario, subtotal)
                     VALUES (?, ?, ?, ?, ?, ?)
                 """, (
                     compra_id,

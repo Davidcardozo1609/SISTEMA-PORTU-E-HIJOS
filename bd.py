@@ -65,11 +65,10 @@ class BaseDeDatos:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS registro_ventas (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                clientes_id INTEGER NOT NULL,
-                clientes TEXT NOT NULL,
+                ventas_id INTEGER NOT NULL,
                 fecha TEXT NOT NULL,
                 total REAL NOT NULL,
-                FOREIGN KEY (clientes_id) REFERENCES clientes(id)
+                FOREIGN KEY (ventas_id) REFERENCES ventas(id)
             );
             """)
         
@@ -78,13 +77,11 @@ class BaseDeDatos:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS detalle_ventas (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                venta_id INTEGER NOT NULL,
                 productos TEXT NOT NULL,
                 cantidad INT NOT NULL,
                 precio INT NOT NULL,
                 tipo_pago TEXT NOT NULL,
-                subtotal INT NOT NULL,
-                FOREIGN KEY (venta_id) REFERENCES registro_ventas(id)
+                subtotal INT NOT NULL
             );
             """)
         
