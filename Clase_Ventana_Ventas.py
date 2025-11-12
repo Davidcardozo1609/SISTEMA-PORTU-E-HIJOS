@@ -11,6 +11,8 @@ import customtkinter as ctk
 from Constantes import *
 from bd import BaseDeDatos
 from Plantilla import Clase_Plantilla
+from Clase_Gestor_Ventanas import GestorVentanas
+from Clase_Ventana_Stock import Productos
 
 #OTROS
 import sys, os
@@ -28,6 +30,8 @@ class Ventas(Clase_Plantilla):
                  parent_app=parent_app)
         
         self.bd = BaseDeDatos()
+
+        self.ventana_padre=ventana_padre
         
         self.ventana.title ("Ventas")
         self.validar = self.ventana.register (self.nunu)
@@ -248,81 +252,77 @@ class Ventas(Clase_Plantilla):
             print ("es.aubree.no.aubrey")
         
     def añadir_datos_bd(self):
-         self.listae = []
-         for mlemem in self.mlem.get_children():
-            self.valor = self.mlem.item(mlemem,"values")
-            print(self.valor)
-            lista = {
-                "producto": self.valor[0],
-                "cantidad":self.valor[1],
-                "precio": self.valor[2],
-                "tipo de pago": self.valor[3],
-                "pago": self.valor[4],
-                "id": self.valor[5]
-                }
-            self.listae.append(int(self.valor[4]))
-            query = ("""SELECT cantidad FROM productos_stock WHERE producto = ? """)
-            data= (self.valor[0],)
-            
-            self.bd.cursor.execute(query,data)
-         
-            mleem = self.bd.cursor.fetchone()[0]
-            
-            
-            mamayo =  int(mleem)-int(self.valor[1])
-            print ("como.siempre.soy.un.print.inutil", mamayo)
-            for ml in self.listae:
-                print ("el.total.es:", sum(self.listae))
-                self.bd.cursor.execute ("""
-                                        INSERT INTO ventas (productos, cantidad, precio, tipo_pago,pago)
-                                         VALUES (?,?,?,?,?)
-                                        """, (self.valor[0], self.valor[1], self.valor[2], self.valor[3],self.valor[4])
-                                        )
+        self.listae = []
+        total_general = 0
+
+        # Si no hay productos en la tabla, salimos
+        if not self.mlem.get_children():
+            ms.showerror("Error", "No hay productos para vender", parent=self.ventana)
+            return
+
+        # 1️⃣ Creamos la venta general
+        fecha_actual = datetime.now().strftime("%d-%m-%Y")
+        self.bd.cursor.execute("""
+            INSERT INTO registro_ventas (fecha, total)
+            VALUES (?, ?)
+        """, (fecha_actual, 0))  # total 0 por ahora, lo actualizamos al final
+
+        id_venta_general = self.bd.cursor.lastrowid  # guardamos el id de la venta general
+
+        # 2️⃣ Insertamos cada producto vendido
+        for mlemem in self.mlem.get_children():
+            self.valor = self.mlem.item(mlemem, "values")
+
+            producto, cantidad, precio, tipo_pago, pago, id_producto = self.valor
+            cantidad = int(cantidad)
+            precio = float(precio)
+            pago = float(pago)
+
+            total_general += pago
 
             
-                  
+            self.bd.cursor.execute("SELECT cantidad FROM productos_stock WHERE producto = ?", (producto,))
+            stock_actual = self.bd.cursor.fetchone()[0]
+            nuevo_stock = stock_actual - cantidad
+
             self.bd.cursor.execute("""
-            UPDATE productos_stock SET cantidad = ? WHERE id = ?""",
-            (mamayo, self.valor[5]))
-            if mamayo == 0:
-                
-                self.bd.cursor.execute("""
-                DELETE FROM productos_stock WHERE cantidad = ?""",(mamayo,))
+                UPDATE productos_stock SET cantidad = ? WHERE id = ?
+            """, (nuevo_stock, id_producto))
+
+            if nuevo_stock == 0:
+                self.bd.cursor.execute("DELETE FROM productos_stock WHERE id = ?", (id_producto,))
+
+            # Insertamos detalle de la venta
+            self.bd.cursor.execute("""
+                INSERT INTO detalle_ventas (ventas_id, productos, cantidad, precio, tipo_pago, pago)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (id_venta_general, producto, cantidad, precio, tipo_pago, pago))
+
+        # 3️⃣ Actualizamos el total en la tabla principal
+        self.bd.cursor.execute("""
+            UPDATE registro_ventas SET total = ? WHERE id = ?
+        """, (total_general, id_venta_general))
+
+        self.bd.conexion.commit()
+
+        self.actualizar_tabla()
+
+        if Productos in GestorVentanas.instancias:
+                GestorVentanas.instancias[Productos].actualizar_tabla()
             
+        Registro_Ventas = __import__("Clase_Ventana_Registro_Ventas").Registro_Ventas
+
+        if Registro_Ventas in GestorVentanas.instancias:
+            GestorVentanas.instancias[Registro_Ventas].actualizar_tabla()
+
         
-    
-
-         self.bd.conexion.commit()
-
-         id_generado = self.bd.cursor.lastrowid
-
-         fecha_actual = datetime.now().strftime("%d-%m-%Y")
-
-         mlem = sum(self.listae)
 
 
-         self.bd.cursor.execute ("""
-                    
-                    
-            INSERT INTO registro_ventas (ventas_id, fecha, total) VALUES (?,?,?)
-                        
-            """, (id_generado,fecha_actual,mlem))
+        ms.showinfo("Éxito", "Venta registrada correctamente", parent=self.ventana)
 
-         self.bd.conexion.commit()
-
-
-         
-         print ("soy tu ultimo.print...La.suma.del.subtotal.es:", mlem)
-         #1. enves.de.estarhaciendo.esto.tendria.que.estarpensandounasolucion. Este codigo me.esta.generando.untipode.trauma.llevolamayoria.deltiempo.escuchando."your.problem"queyamese.las.palabras.iniciales.de.memoria(noque.fuerandificiles),pero.enserio,ESTOMEESTADEJANDODEMENTE.Comoesposiblequecadasolucionseasimple.hastaquelotengoqeuañadiralabasededatos?.Comoañadoeltotal?Lamayoriaestahechopormi.Tengoaun.algo.de.orgullo.deno.usar.chatgpt.aunque...Admito.que.se.que.usarlo.es.algo.necesario.para.la.aglizacion.Es.obvio.quehe.usado.noloniegonioculto.Entiendo.su.utilidad.y.todo.pero.aunprefiero.intentar.por.mi.cuenta...Perobueno.Para.resumir.Me.quiero.morir.porfavor.acaben.este.sufrimiento.llamado.ventas.Tenia.planeadoalgomas.pero.mlem.
-         #no
-                                               
-                        
-                        
-                        
-         ms.showinfo ("felicidades", "Haz compretado la venta", parent = self.ventana)
-            
-         for e in self.mlem.get_children():
-                         self.mlem.delete(e)
+    def actualizar_tabla(self):
+         for fila in self.mlem.get_children():
+             self.mlem.delete(fila)
 
                         
                 

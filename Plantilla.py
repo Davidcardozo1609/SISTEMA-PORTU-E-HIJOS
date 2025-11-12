@@ -38,7 +38,7 @@ class Clase_Plantilla():
             self.crear_ventana(titulo="Menu Principal")
         else:
             self.ventana = ctk.CTkToplevel(self.master) if self.master else ctk.CTk()
-            self.ventana.title("Menu Principal")
+            self.ventana.title(titulo)
             self.ventana.withdraw()
         
         self.ventana.minsize(width=1200, height=650)
@@ -387,7 +387,7 @@ class Clase_Plantilla():
             font=FONT_BTNS_DESPEGABLE,
             command=lambda: self.ir_a_pantalla_x(
                 
-                __import__("Clase_Ventana_Ventas").Ventas,  # 👈 import diferido
+                __import__("Clase_Ventana_Registro_Ventas").Registro_Ventas,  # 👈 import diferido
                 #Aquí no se importa Ventas al inicio, solo cuando el usuario hace clic en el botón.
                 #Para ese momento, Plantilla ya está cargada y no hay conflicto.
                 #Así Python puede ejecutar la herencia de Ventas(Clase_Plantilla) sin problemas.

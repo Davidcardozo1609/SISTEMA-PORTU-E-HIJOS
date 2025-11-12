@@ -14,7 +14,7 @@ from tkinter import ttk
 
 #___________CLASE COMPRAS___________________
 class Registro_Ventas(Clase_Plantilla):
-    def __init__(self,master,titulo="Compras",ventana_padre=None,ventana_login=None,usuario_actual=None,parent_app=None,no_abrir_ventana=None):
+    def __init__(self,master,titulo="Registro De Ventas",ventana_padre=None,ventana_login=None,usuario_actual=None,parent_app=None,no_abrir_ventana=None):
         
         
                 #En el init se definen las cosas que se van a ejecutar al instanciar la clase
@@ -43,14 +43,14 @@ class Registro_Ventas(Clase_Plantilla):
 #_______________________________FRAMES_____________________________________
         
         #Fr_Gris (ayuda a hacer el borde)
-        self.Fr_help_compras = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
-        self.Fr_help_compras.place(relx=0.1, rely=0.2, relwidth=0.8, relheight=0.65)
+        self.Fr_help_ventas = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
+        self.Fr_help_ventas.place(relx=0.1, rely=0.2, relwidth=0.8, relheight=0.65)
         
         #Fr_Blanco el principal
-        self.Fr_blanco_compras = ctk.CTkFrame(self.Fr_help_compras,
+        self.Fr_blanco_ventas = ctk.CTkFrame(self.Fr_help_ventas,
                                                 fg_color="#ffffff" 
                                                 )
-        self.Fr_blanco_compras.place(relx=0.002, rely=0.002, relwidth=0.996, relheight=0.996)
+        self.Fr_blanco_ventas.place(relx=0.002, rely=0.002, relwidth=0.996, relheight=0.996)
         
         
         
@@ -58,8 +58,8 @@ class Registro_Ventas(Clase_Plantilla):
 
         # Crear la tabla
         self.crear_tabla(
-            self.Fr_blanco_compras,  # frame donde irá la tabla
-            columnas=["ID", "Clientes","Fecha","Total"],
+            self.Fr_blanco_ventas,  # frame donde irá la tabla
+            columnas=["ID","Fecha","Total"],
             con_acciones=True,
             detalles=True
 
@@ -70,13 +70,13 @@ class Registro_Ventas(Clase_Plantilla):
 
         #Label Titulo
         self.Lbl_nombre_modulo.configure(text="Registro de Ventas")
-        self.Lbl_nombre_modulo.place(relx=0.1,rely=0.03,relwidth=0.35,relheight=0.1)
+        self.Lbl_nombre_modulo.place(relx=0.1,rely=0.03,relwidth=0.43,relheight=0.1)
         
         self.tree.bind("<Button-1>", self.click_en_tabla)
         
         
         
-        self.Compras = ctk.CTkButton(
+        self.Ventas = ctk.CTkButton(
             self.Fr_Principal,
             text="+ Nuevo Registro",
             fg_color="blue",
@@ -92,7 +92,7 @@ class Registro_Ventas(Clase_Plantilla):
             ))
         
         
-        self.Compras.place(relx=0.1, rely=0.92, relwidth=0.2, relheight=0.07)
+        self.Ventas.place(relx=0.1, rely=0.85, relwidth=0.2, relheight=0.07)
         
         
         
@@ -102,7 +102,7 @@ class Registro_Ventas(Clase_Plantilla):
             self.tree.delete(fila)
             
         self.bd.cursor.execute(
-        """SELECT id, clientes, fecha, total FROM registro_ventas"""
+        """SELECT id, fecha, total FROM registro_ventas"""
         
         )
         resultado = self.bd.cursor.fetchall()
@@ -123,7 +123,7 @@ class Registro_Ventas(Clase_Plantilla):
         fila_id = self.tree.item(item, "values")
 
         # Si la columna es la de "Detalles"
-        if columna == "#5":  # Ajustá el número de columna según tu tabla
+        if columna == "#4":  # Ajustá el número de columna según tu tabla
             self.ventana_detalles(fila_id)
 
             
@@ -146,7 +146,7 @@ class Registro_Ventas(Clase_Plantilla):
         frame_tabla = ctk.CTkFrame(ventana_detalle)
         frame_tabla.pack(fill="both", expand=True, padx=10, pady=10)
 
-        columnas = ["Producto", "Categoría", "Cantidad", "Tipo Pago", "Subtotal"]
+        columnas = ["Producto", "Cantidad","Precio","Tipo Pago", "Pago"]
         tree = ttk.Treeview(frame_tabla, columns=columnas, show="headings", height=10)
         for col in columnas:
             tree.heading(col, text=col)
@@ -155,9 +155,9 @@ class Registro_Ventas(Clase_Plantilla):
 
         # Consultar los datos de la compra
         self.bd.cursor.execute("""
-            SELECT producto, categoria, cantidad, precio_unitario, subtotal
+            SELECT productos, cantidad, precio, tipo_pago, pago
             FROM detalle_ventas
-            WHERE compra_id = ?
+            WHERE ventas_id = ?
         """, (venta_id,))
         resultado = self.bd.cursor.fetchall()
 
