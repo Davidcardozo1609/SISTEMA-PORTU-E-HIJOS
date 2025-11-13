@@ -8,7 +8,6 @@ from bd import BaseDeDatos
 from Plantilla import Clase_Plantilla
 import customtkinter as ctk
 import tkinter as tk 
-from tksheet import Sheet #permite hacer la tabla
 from datetime import datetime
 from tkinter import ttk
 

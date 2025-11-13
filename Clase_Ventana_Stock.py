@@ -13,7 +13,6 @@ from Constantes import ICONO_FLECHA
 from Clase_Editar_Producto import EditarProducto
 from Plantilla import Clase_Plantilla
 import customtkinter as ctk
-from tksheet import Sheet #permite hacer la tabla
 
 # --- PRODUCTOS --- #
 
