@@ -890,7 +890,9 @@ class Clase_Plantilla():
         self.label_producto.place(x=20, y=20)
         
         
-        
+        self.entry_producto = ctk.CTkEntry(self.ventana_menu,validate="key",validatecommand=self.limitar_letras_espacios)
+        self.entry_producto.place(x=140, y=20)
+        self.entry_producto.insert(0, valores[1])
        
         
         #label categorias

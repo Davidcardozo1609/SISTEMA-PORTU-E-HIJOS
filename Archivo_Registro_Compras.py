@@ -59,7 +59,7 @@ class Registro_Compras(Clase_Plantilla):
         self.crear_tabla(
             self.Fr_blanco_compras,  # frame donde irá la tabla
             columnas=["ID", "Proveedor","Fecha","Total"],
-            con_acciones=True,
+            con_acciones=False,
             detalles=True
 
         )
