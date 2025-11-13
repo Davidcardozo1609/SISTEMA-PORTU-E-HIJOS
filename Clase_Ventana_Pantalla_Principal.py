@@ -11,7 +11,7 @@ from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from Clase_Gestor_Ventanas import GestorVentanas
-
+from datetime import datetime, timedelta
 
 
 
@@ -80,9 +80,16 @@ class Ventana_Pantalla_Principal(Clase_Plantilla):
                                                    parent_app=None,
                                                    no_abrir_ventana=True
                                                    )
+
+        # En tu clase Ventana_Pantalla_Principal, después de conectarte a la BD:
+        try:
+            self.bd.cursor.execute("SELECT COUNT(DISTINCT categoria) FROM productos")
+            cantidad_categorias = self.bd.cursor.fetchone()[0] or 0
+        except:
+            cantidad_categorias = 0
+
         
-        
-        
+
 
         
         
@@ -165,7 +172,7 @@ class Ventana_Pantalla_Principal(Clase_Plantilla):
         self.Cli_Lbl_info = ctk.CTkLabel(self.Fr_Cli_info,
                                          image=self.logo_Cli_info_Rd,
                                          compound="left",
-                                         text="  24",
+                                         text=f"  {cantidad_categorias}",
                                          font=("Arial", 24),
                                          fg_color="white",
                                          text_color="black")
@@ -233,47 +240,72 @@ class Ventana_Pantalla_Principal(Clase_Plantilla):
                                    fg_color="white",
                                    text_color="black")
         self.prod_Text_info.place(relx=0,rely=0.7,relwidth=1,relheight=0.3)
+
+        self.mostrar_grafico_barras()
+        self.actualizar_cantidades()
         
         #_________________GRAFICO_____________________
-        
-        # Datos de ejemplo (categorías y valores)
-        self.categorias = ["Ropa interior", "Pijamas", "Medias", "Otros"]
-        self.valores = [120, 80, 60, 90]
-        
-        # Crear figura de matplotlib
-        fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
-        """plt.subplots() crea una figura (fig) y un eje (ax).
+    def mostrar_grafico_barras(self):
+        hoy = datetime.now().date()
+        inicio_semana = hoy - timedelta(days=hoy.weekday())  # lunes de esta semana
+        inicio_mes = hoy.replace(day=1)
 
-        figsize=(4,4) → tamaño del gráfico en pulgadas (4x4).
+        # Traer todas las ventas
+        self.bd.cursor.execute("SELECT fecha, total FROM registro_ventas")
+        filas = self.bd.cursor.fetchall()
 
-        dpi=100 → resolución (puntos por pulgada).
+        ventas_hoy = 0
+        ventas_semana = 0
+        ventas_mes = 0
 
-        ax es donde realmente se dibuja el gráfico."""
-        
-        # Crear el gráfico circular
-        ax.pie(self.valores, labels=self.categorias, autopct="%1.1f%%", startangle=90)
+        # Función para convertir texto a fecha
+        def convertir_fecha(fecha_txt):
+            try:
+                # formato guardado en la BD: dd/mm/yyyy
+                return datetime.strptime(fecha_txt, "%d-%m-%Y").date()
 
-        """ax.pie() dibuja el gráfico circular 
+            except Exception as e:
+                print("Error al convertir fecha:", fecha_txt, e)
+                return None
 
-        valores → determina cuánto ocupa cada parte.
+        for fecha_txt, total in filas:
+            fecha = convertir_fecha(fecha_txt)
+            if not fecha:
+                continue
 
-        labels=categorias → pone el nombre de cada porción.
+            if fecha == hoy:
+                ventas_hoy += float(total)
+            if inicio_semana <= fecha <= hoy:
+                ventas_semana += float(total)
+            if inicio_mes <= fecha <= hoy:
+                ventas_mes += float(total)
 
-        autopct="%1.1f%%" → agrega los porcentajes con 1 decimal (23.5%).
 
-        startangle=90 → rota el gráfico para que arranque desde arriba."""
+        # Preparar datos para el gráfico
+        categorias = ["Hoy", "Semana", "Mes"]
+        valores = [ventas_hoy, ventas_semana, ventas_mes]
 
-        ax.set_title("Stock por categoría")
-        # Pone el título arriba del gráfico.
-        
-        # Integrar matplotlib en Tkinter
-        self.canvas_grafico = FigureCanvasTkAgg(fig, master=self.Fr_Principal)
-        #convierte la figura fig de matplotlib en un widget de Tkinter dentro de la ventana .
-        self.canvas_grafico.draw()
-        #canvas.draw() → dibuja el gráfico en memoria.
-        self.canvas_grafico.get_tk_widget()
-        self.canvas_grafico.get_tk_widget().place(relx=0.25,rely=0.5,relwidth=0.5,relheight=0.5)
-        #coloca el gráfico en la ventana 
+        # Crear gráfico de barras
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
+        barras = ax.bar(categorias, valores, color=["#3B82F6", "#10B981", "#F97316"])
+
+        # Etiquetas arriba de las barras
+        for barra in barras:
+            y = barra.get_height()
+            ax.text(barra.get_x() + barra.get_width()/2, y + 0.5, f"${y:.2f}", ha="center", va="bottom")
+
+        ax.set_title("Ventas Totales", fontsize=14, fontweight="bold")
+        ax.set_ylabel("Monto ($)")
+        ax.set_xlabel("Periodo")
+        ax.grid(axis="y", linestyle="--", alpha=0.7)
+
+        # Mostrar en Tkinter
+        canvas = FigureCanvasTkAgg(fig, master=self.Fr_Principal)
+        canvas.draw()
+        canvas.get_tk_widget().place(relx=0.25, rely=0.48, relwidth=0.5, relheight=0.5)
+
+
+  
 
 
 
@@ -315,6 +347,44 @@ class Ventana_Pantalla_Principal(Clase_Plantilla):
         
         return img
         #devuelve la imagen
+
+    def actualizar_cantidad_clientes(self):
+
+        self.cntd_cli = 0
+
+        query = """ SELECT * FROM clientes """
+
+        self.bd.cursor.execute(query)
+
+        clientes_detectados = self.bd.cursor.fetchall()
+
+        for cliente in clientes_detectados:
+
+            self.cntd_cli += 1
+        
+        self.Cli_Lbl_info.configure(text=f"   {self.cntd_cli}")
+    
+    def actualizar_cantidad_proveedores(self):
+
+        self.cntd_prov = 0
+
+        query = """ SELECT * FROM proveedores """
+
+        self.bd.cursor.execute(query)
+
+        proveedores_detectados = self.bd.cursor.fetchall()
+
+        for cliente in proveedores_detectados:
+
+            self.cntd_prov += 1
+        
+        self.prov_Lbl_info.configure(text=f"   {self.cntd_prov}")
+
+    
+    def actualizar_cantidades(self):
+
+        self.actualizar_cantidad_clientes()
+        self.actualizar_cantidad_proveedores()
             
         
 """class Plantilla:

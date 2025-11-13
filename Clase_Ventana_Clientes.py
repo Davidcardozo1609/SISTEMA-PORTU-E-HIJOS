@@ -6,6 +6,7 @@ from tkinter import messagebox as ms
 import sys, os
 from Constantes import *
 from bd import BaseDeDatos  
+from Clase_Gestor_Ventanas import GestorVentanas
 
 # REFERENCIAS
 
@@ -301,6 +302,12 @@ class Clientes(Clase_Plantilla):
             self.bd.conexion.commit()
 
             self.actualizar_listado()
+
+            Ventana_Pantalla_Principal = __import__("Clase_Ventana_Pantalla_Principal").Ventana_Pantalla_Principal
+
+            if Ventana_Pantalla_Principal in GestorVentanas.instancias:
+                GestorVentanas.instancias[Ventana_Pantalla_Principal].actualizar_cantidades()
+
 
             ms.showinfo("Listo!", "Cliente registrado exitosamente.", parent=self.ventana)
             return

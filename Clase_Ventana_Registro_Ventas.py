@@ -60,7 +60,7 @@ class Registro_Ventas(Clase_Plantilla):
         self.crear_tabla(
             self.Fr_blanco_ventas,  # frame donde irá la tabla
             columnas=["ID","Fecha","Total"],
-            con_acciones=True,
+            con_acciones=False,
             detalles=True
 
         )
@@ -109,7 +109,7 @@ class Registro_Ventas(Clase_Plantilla):
         
         for fila in resultado:
             valores = list(fila)  
-            valores += ["Detalles","Editar", "Eliminar"]  # Añadimos botones de acción
+            valores += ["Detalles"]  # Añadimos botones de acción
             self.tree.insert("", "end", values=valores)
             
             

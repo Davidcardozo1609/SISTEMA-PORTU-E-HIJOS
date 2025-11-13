@@ -142,6 +142,7 @@ class Compras(Clase_Plantilla):
         
         self.cmb_proveedor.bind("<FocusIn>", self.on_focus)
         self.cmb_proveedor.bind("<FocusOut>", self.on_focus_out)
+    
         
         
         
@@ -208,6 +209,15 @@ class Compras(Clase_Plantilla):
         if self.cmb_proveedor.get() == "":
             self.cmb_proveedor.set("Seleccionar proveedor")
             self.cmb_proveedor.configure(fg_color="#f5f5f5", text_color="#999999")
+
+    def actualizar_combobox(self):
+        query = ("""SELECT nombre FROM proveedores""")
+        self.bd.cursor.execute (query)
+        self.pro = self.bd.cursor.fetchall()
+        self.pro = [fila[0] for fila in self.pro]
+
+
+        self.cmb_proveedor.configure(values=self.pro if self.pro else [""])
             
             
             

@@ -34,17 +34,21 @@ class Ventas(Clase_Plantilla):
         self.ventana_padre=ventana_padre
         
         self.ventana.title ("Ventas")
+
+
         self.validar = self.ventana.register (self.nunu)
+        self.validar2 = self.ventana.register (self.nunu2)
         
-        self.Lbl_nombre_modulo.configure(text="Ventas")
+        self.Lbl_nombre_modulo.configure(font=("Segoe UI", 50, "bold"),text="Ventas")
+        self.Lbl_nombre_modulo.place(relx=0.05,rely=0.03,relwidth=0.382,relheight=0.1)
         
         
-        self.soyunboton = ctk.CTkButton (self.ventana, text = "soy.un.boton.que.abre.una.ventana",  fg_color="blue",hover_color="#00008B", command =  self.menu_ventas)
-        self.soyunboton.place (relx = 0.3, rely = 0.2, relwidth = 0.2, relheight = 0.1)
+        self.soyunboton = ctk.CTkButton (self.ventana, text = "+ Añadir producto",  fg_color="blue",hover_color="#00008B",  font = ("Carme", 18), command =  self.menu_ventas)
+        self.soyunboton.place (relx = 0.3, rely = 0.22, relwidth = 0.13, relheight = 0.06)
         
 #         frame inutil, solo sirve para testeo.
         self.frame_recibo = ctk.CTkFrame (self.ventana)
-        self.frame_recibo.place (relx = 0.3, rely = 0.3, relheight = 0.5, relwidth = 0.6)
+        self.frame_recibo.place (relx = 0.3, rely = 0.31, relheight = 0.47, relwidth = 0.6)
           #         treeview
         self.mlem = ttk.Treeview (self.frame_recibo)
         self.mlem["column"] = ( "producto", "cantidad", "precio", "tipo de pago", "pago","id", "editar", "eliminar")
@@ -77,13 +81,23 @@ class Ventas(Clase_Plantilla):
         self.mlem.heading ("editar", text = "Editar", anchor = tk.E)
         self.mlem.heading ("eliminar", text = "eliminar", anchor = tk.E)
         
-        self.boton_añadir_bd = ctk.CTkButton (self.ventana, text = "usame.paraañadir.datosa.la.bd",  fg_color="blue",hover_color="#00008B",command = lambda: self.añadir_datos_bd())
+        self.boton_añadir_bd = ctk.CTkButton (self.ventana, text = "Finalizar venta",  fg_color="blue",hover_color="#00008B", font = ("Carme", 16),command = lambda: self.añadir_datos_bd())
         self.boton_añadir_bd.place (relx = 0.3, rely = 0.8, relwidth = 0.1, relheight = 0.1)
         self.mlem.bind ("<Button-1>", self.editar_arbolito)
         
         
     def nunu (self,er):
-       return er.isdigit() or er==""
+       
+        return (
+        er == "" or
+        (len(er) <= 10 and
+         er.replace(".", "", 1).isdigit())
+        )
+    def nunu2 (self,er):
+        if len(er)<5:
+            return er.isdigit() or er == ""
+        else:
+            return er == ""
     
         
         
@@ -136,10 +150,11 @@ class Ventas(Clase_Plantilla):
                                                      )
         self.opcion_metodo_pago.place (relx = 0.1, rely = 0.55, relwidth = 0.8, relheight = 0.1)
 
-        self.boton_añadir = ctk.CTkButton (self.er, text = ("soy.un.boton.que...roba.datos.v3"), font = ("Carme", 16), command = lambda: self.robar_datos())
-        self.boton_añadir.place (relx = 0.1, rely = 0.7, relwidth = 0.8, relheight = 0.1)
-        ml = self.opcion_metodo_pago.get()
-        print (ml)
+        self.boton_añadir = ctk.CTkButton (self.er, text = ("Finalizar"), font = ("Carme", 16), command = lambda: self.robar_datos())
+        self.boton_añadir.place (relx = 0.1, rely = 0.7, relwidth = 0.8, relheight = 0.05)
+        self.cantidad_opcion.bind ("<Return>", lambda e: self.entry_precio.focus())
+        self.entry_precio.bind ("<Return>", lambda e: self.boton_añadir.focus())
+        self.boton_añadir.bind ("<Return>", lambda e: self.robar_datos())
         
       
 #   Somos.lasfuncionesysolohacemossufrir alquenosuse.
@@ -166,11 +181,7 @@ class Ventas(Clase_Plantilla):
         tipo_pago = self.opcion_metodo_pago.get()
         
         pago = int(cantidad) * int(precio)
-        print (productoo)
-        print (cantidad)
-        print (precio)
-        
-        print (tipo_pago)
+
         self.lista_mlem =[]
         for fila in self.mlem.get_children():
             self.mle = self.mlem.item (fila,"values")
@@ -205,22 +216,19 @@ class Ventas(Clase_Plantilla):
         if int(cantidad)>consulta_int:
             ms.showerror ("error", "La cantidad que haz intentado colocar es mayor que la cantidad actual")
             return
-        
-      
-     
-        
      
         self.cantidad_opcion.delete(0, "end")
         self.entry_precio.delete(0, "end")
+
         ms.showinfo ("Felicidades", "Los datos han sido añadidos correctamente.", parent = self.er)
         
         query = ("""SELECT id FROM productos_stock WHERE producto = ?""")
         data = (productoo,)
         self.bd.cursor.execute(query,data)
-        idd = self.bd.cursor.fetchone()[0]
-        print (idd)
+        self.idd = self.bd.cursor.fetchone()[0]
+
       
-        self.mlem.insert("", tk.END, values = (productoo, cantidad, precio, tipo_pago, pago, idd))
+        self.mlem.insert("", tk.END, values = (productoo, cantidad, precio, tipo_pago, pago, self.idd,"editar", "eliminar"))
         
         self.mlem.pack (fill="both", expand = True)
        
@@ -237,7 +245,11 @@ class Ventas(Clase_Plantilla):
             
             self.bd.cursor.execute(query,data)
             self.prueba = self.bd.cursor.fetchone()
+            self.cantidad_bd = ctk.CTkLabel (self.er, text = "", font = ("Carme", 10))
+            self.cantidad_bd.place (relx = 0.7, rely = 0.2, relwidth = 0.25, relheight = 0.05)
             self.cantidad_bd.configure (text = self.prueba)
+
+
             
            
             
@@ -245,11 +257,165 @@ class Ventas(Clase_Plantilla):
         x, y = event.x, event.y
         self.editar_datos = self.mlem.identify_row(y)
         self.editar_datoss = self.mlem.identify_column (x)
-        print ("mleeeeeeeem", self.editar_datos)
+  
         
-        print ("mer", self.editar_datoss)
-        if self.editar_datos == "#7":
-            print ("es.aubree.no.aubrey")
+        
+        if self.editar_datoss == "#7" and self.editar_datos :
+            print ("Mi.segundo.nombre.va.ser.aubree.no.aubrey") #Esteprint.nolo.borro.para.confundir.y.porque.si.No.me.preguntres.que.significa.
+            self.subventana = ctk.CTkToplevel (self.ventana)
+            self.subventana.geometry = ('250x250')
+            self.subventana.title  ("Editar")
+            self.subventana.grab_set()
+            
+            self.err = self.mlem.item(self.editar_datos,"values")
+            self.mlm = {
+                "producto": self.err[0],
+                "cantidad": self.err[1],
+                "precio": self.err[2]
+                }
+            
+            
+            
+           
+            query = ("""SELECT producto FROM productos_stock""")
+            
+            
+            self.bd.cursor.execute(query)
+            mleem = self.bd.cursor.fetchall()
+            self.menu_la = ctk.CTkLabel (self.subventana, text = "Producto", font = ("Carme", 10))
+            self.menu_la.place (relx = 0.1, rely = 0.05, relheight = 0.5, relwidth = 0.22)
+            self.menu_v2 = ctk.CTkOptionMenu (self.subventana,
+                                                             values =[self.err[0]]+list(self.filas),
+                                                             font = ("Carme", 16),
+                                                             command = self.mostrar_cantidad2)
+            self.menu_v2.place (relx = 0.1, rely = 0.1, relheight = 0.1, relwidth = 0.85)
+            
+            
+            self.cantidad_label = ctk.CTkLabel (self.subventana, font = ("Carme", 10), text = "Cantidad")
+            self.cantidad_label.place (relx = 0.11, rely = 0.20, relheight = 0.05, relwidth = 0.22)
+            
+            self.label_cantidad_bd = ctk.CTkLabel (self.subventana, text = "", font = ("Carme", 10))
+            self.label_cantidad_bd.place (relx = 0.8, rely = 0.20, relheight = 0.05, relwidth = 0.22)
+            
+            
+            
+            self.cantidad_entry = ctk.CTkEntry(self.subventana, validate = "key",  validatecommand=(self.validar2, "%P"), font =("Carme", 16))
+            self.cantidad_entry.place (relx = 0.1, rely = 0.25, relheight = 0.1, relwidth = 0.85)
+            self.cantidad_entry.insert (0,self.err[1])
+            
+            self.precio_label = ctk.CTkLabel (self.subventana, font = ("Carme", 10), text = "Precio")
+            self.precio_label.place (relx = 0.085, rely = 0.35, relheight = 0.05, relwidth = 0.22)
+            
+            self.precio_entry  = ctk.CTkEntry (self.subventana, font = ("Carme", 16), validate = "key",  validatecommand=(self.validar, "%P"))
+            self.precio_entry.place (relx = 0.1, rely = 0.40, relheight = 0.1, relwidth = 0.85)
+            self.precio_entry.insert (0,self.err[2])
+            
+            self.metododepagolabel = ctk.CTkLabel (self.subventana, text = "Metodo de pago", font = ("Carme", 10))
+            self.metododepagolabel.place (relx = 0.085, rely = 0.50, relheight = 0.05, relwidth = 0.42)
+            
+            self.metododepago2 =ctk.CTkOptionMenu (self.subventana,
+                                                                                        values =  ["Efectivo", "Transferencia", "Credito", "Debito"],
+                                                                                        font = ("Carmen", 16))
+            self.metododepago2.place (relx = 0.1, rely = 0.55, relheight = 0.1, relwidth = 0.85)
+            
+            self.boton_finalizar = ctk.CTkButton (self.subventana, text = "Finalizar", command = lambda: self.actualizar())
+            self.boton_finalizar.place (relx = 0.1, rely = 0.7, relheight = 0.1, relwidth = 0.85)
+            self.cantidad_entry.bind ("<Return>", lambda e: self.precio_entry.focus())
+            self.precio_entry.bind ("<Return>", lambda e: self.boton_finalizar.focus())
+            self.boton_finalizar.bind ("<Return>", lambda e: self.actualizar())
+        elif self.editar_datoss == "#8" and self.editar_datos:
+            er = ms.askquestion ("Eliminar fila?", "Enserio quieres eliminar esta fila?", parent = self.ventana)
+            if er == "yes":
+                self.mlem.delete(self.editar_datos)
+                ms.showinfo ("Realizado", "Se ha eliminado la fila", parent = self.ventana)
+            else:
+                ms.showinfo ("Decision","No se ha eliminado la fila", parent = self.ventana)
+            
+            
+            #Holaaa,soy.lapersonaqueha.progamado.esto.Paraavisarte.que.odio.mi.vida.Porfavor.haganque.si.escucho.your.problem.me.de.underrame.cerebral.asi.dejodeprogamar.
+                                                                                       
+            
+            
+    def actualizar(self):
+
+        actupro = self.menu_v2.get()
+        actucan = self.cantidad_entry.get()
+
+
+
+        if not actucan:
+            ms.showwarning ("Error", "No haz colocado una cantidad a actualizar", parent = self.subventana)
+            self.actucan.delete (0,"end")
+            self.actuprec.delete (0,"end")
+            return
+        
+
+        actuprec = self.precio_entry.get()
+
+
+        if not actuprec:
+            ms.showwarning ("Error", "No haz colocado un precio a actualizar", parent = self.subventana)
+            self.actucan.delete (0,"end")
+            self.actupro.delete (0,"end")
+            return
+        
+
+        for fila in self.mlem.get_children():
+            self.mler = self.mlem.item (fila,"values")
+            lim ={
+                "producto": self.mler[0]
+                }
+            actutipopago = self.metododepago2.get()
+        
+        
+        
+            if self.editar_datos == fila:
+                continue
+            #chatgptafullcon lodel.mlemitem
+
+
+            if actupro == self.mler[0] :
+                ms.showwarning ("error", "No se puede realizar la operacion", parent = self.subventana)
+                return
+        
+        query = ("""SELECT cantidad FROM productos_stock WHERE producto =  ?""")
+        data = (actupro,)
+       
+        self.bd.cursor.execute(query,data)
+        consulta2 = self.bd.cursor.fetchone() [0]
+       
+        consulta_int2 = int(consulta2)
+        
+        if int(actucan)>int(consulta2):
+            ms.showwarning ("Error", "La cantidad que se ha ingresado es mayor que la cantidad disponible", parent = self.subventana)
+            return
+        
+        
+        
+        totalnuevo = int(actucan) * float(actuprec)
+        self.mlem.delete(self.editar_datos)
+       
+        self.mlem.insert ("", tk.END, values = (actupro, actucan, actuprec, actutipopago, totalnuevo,self.idd, "editar", "eliminar"))
+        
+        ms.showinfo ("Felicidades", "Haz actualizado el producto", parent = self.subventana)
+        self.subventana.destroy()
+    
+         
+        
+        
+        
+                                                             
+            
+    def mostrar_cantidad2(self, producto):
+        actu= self.menu_v2.get()
+        query =("""SELECT cantidad FROM productos_stock WHERE producto = ?""")
+        data = (actu,)
+        self.bd.cursor.execute(query,data)
+        err = self.bd.cursor.fetchone()
+        
+        self.label_cantidad_bd.configure (text = err)
+
+        
         
     def añadir_datos_bd(self):
         self.listae = []
@@ -273,7 +439,7 @@ class Ventas(Clase_Plantilla):
         for mlemem in self.mlem.get_children():
             self.valor = self.mlem.item(mlemem, "values")
 
-            producto, cantidad, precio, tipo_pago, pago, id_producto = self.valor
+            producto, cantidad, precio, tipo_pago, pago, id_producto = self.valor[:6]
             cantidad = int(cantidad)
             precio = float(precio)
             pago = float(pago)

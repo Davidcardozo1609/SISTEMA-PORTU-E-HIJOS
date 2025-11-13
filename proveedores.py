@@ -8,6 +8,7 @@ from Plantilla import Clase_Plantilla
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox as ms
+from Clase_Gestor_Ventanas import GestorVentanas
 
 class Proveedores(Clase_Plantilla):
     def __init__(self,master,titulo="Proveedores",ventana_padre=None,ventana_login=None,usuario_actual=None,parent_app=None):
@@ -161,6 +162,17 @@ class Proveedores(Clase_Plantilla):
         
             """, (proveedor_valor, telefono_valor, direccion_valor))
         self.bd.conexion.commit()
+
+        Ventana_Pantalla_Principal = __import__("Clase_Ventana_Pantalla_Principal").Ventana_Pantalla_Principal
+
+        if Ventana_Pantalla_Principal in GestorVentanas.instancias:
+            GestorVentanas.instancias[Ventana_Pantalla_Principal].actualizar_cantidades()
+
+        Clase_Ventana_Compras = __import__("Clase_Ventana_Compras").Compras
+
+        if Clase_Ventana_Compras in GestorVentanas.instancias:
+            GestorVentanas.instancias[Clase_Ventana_Compras].actualizar_combobox()
+
         ms.showinfo ("exito", "Has añadido un proveedor")
             
     
