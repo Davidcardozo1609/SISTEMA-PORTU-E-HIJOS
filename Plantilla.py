@@ -454,7 +454,16 @@ class Clase_Plantilla():
                                         compound="left",
                                         anchor="w",
                                         text_color="white",
-                                        font=FONT_BTNS_DESPEGABLE)
+                                        font=FONT_BTNS_DESPEGABLE,
+                                        command=lambda: self.ir_a_pantalla_x(
+                                            __import__("Clase_Ventana_Ganancias").Ganancias,
+                                            master=self.ventana,
+                                            titulo="Ganancias",
+                                            ventana_padre=self,
+                                            ventana_login=self.ventana_login,
+                                            usuario_actual=self.usuario_actual,
+                                            parent_app=self)
+                                            )
         self.Ganancias_Bn.pack(fill="x",padx=30,pady=3)
         
         self.reportes_visible = False

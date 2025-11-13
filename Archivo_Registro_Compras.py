@@ -3,9 +3,9 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import messagebox as ms
 import sys, os
-from Constantes import *
-from bd import BaseDeDatos  
-from Plantilla import Clase_Plantilla
+from Constantes import * #CLASE
+from bd import BaseDeDatos  #CLASE
+from Plantilla import Clase_Plantilla#CLASE
 import customtkinter as ctk
 import tkinter as tk 
 from datetime import datetime
