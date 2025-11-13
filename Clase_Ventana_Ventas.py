@@ -151,7 +151,7 @@ class Ventas(Clase_Plantilla):
         self.opcion_metodo_pago.place (relx = 0.1, rely = 0.55, relwidth = 0.8, relheight = 0.1)
 
         self.boton_añadir = ctk.CTkButton (self.er, text = ("Finalizar"), font = ("Carme", 16), command = lambda: self.robar_datos())
-        self.boton_añadir.place (relx = 0.1, rely = 0.7, relwidth = 0.8, relheight = 0.05)
+        self.boton_añadir.place (relx = 0.1, rely = 0.7, relwidth = 0.8, relheight = 0.1)
         self.cantidad_opcion.bind ("<Return>", lambda e: self.entry_precio.focus())
         self.entry_precio.bind ("<Return>", lambda e: self.boton_añadir.focus())
         self.boton_añadir.bind ("<Return>", lambda e: self.robar_datos())
@@ -165,17 +165,17 @@ class Ventas(Clase_Plantilla):
         cantidad = self.cantidad_opcion.get()
 
         if not productoo:
-            ms.showerror ("Faltante", "Falta colocar un producto")
+            ms.showerror ("Faltante", "Falta colocar un producto",parent=self.er)
             return
 
 
         if not cantidad:
-            ms.showerror ("Faltante", "Falta colocar la cantidad")
+            ms.showerror ("Faltante", "Falta colocar la cantidad",parent=self.er)
             return
         
         precio = self.entry_precio.get()
         if not precio:
-            ms.showerror ("Faltante", "Falta colocar el precio")
+            ms.showerror ("Faltante", "Falta colocar el precio",parent=self.er)
             return
     
         tipo_pago = self.opcion_metodo_pago.get()
@@ -219,6 +219,7 @@ class Ventas(Clase_Plantilla):
      
         self.cantidad_opcion.delete(0, "end")
         self.entry_precio.delete(0, "end")
+
 
         ms.showinfo ("Felicidades", "Los datos han sido añadidos correctamente.", parent = self.er)
         
@@ -480,6 +481,11 @@ class Ventas(Clase_Plantilla):
 
         if Registro_Ventas in GestorVentanas.instancias:
             GestorVentanas.instancias[Registro_Ventas].actualizar_tabla()
+
+        Clase_Ventana_Pantalla_Principal = __import__("Clase_Ventana_Pantalla_Principal").Ventana_Pantalla_Principal
+
+        if Clase_Ventana_Pantalla_Principal in GestorVentanas.instancias:
+            GestorVentanas.instancias[Clase_Ventana_Pantalla_Principal].actualizar_cantidades()
 
         
 

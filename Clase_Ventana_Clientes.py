@@ -346,6 +346,11 @@ class Clientes(Clase_Plantilla):
         self.bd.conexion.commit()
 
         self.actualizar_listado_al_iniciar()
+
+        Clase_Ventana_Pantalla_Principal = __import__("Clase_Ventana_Pantalla_Principal").Ventana_Pantalla_Principal
+
+        if Clase_Ventana_Pantalla_Principal in GestorVentanas.instancias:
+            GestorVentanas.instancias[Clase_Ventana_Pantalla_Principal].actualizar_cantidades()
     
     def actualizar_listado(self):
 

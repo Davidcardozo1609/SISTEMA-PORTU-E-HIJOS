@@ -46,7 +46,7 @@ class Compras(Clase_Plantilla):
         
         #Fr_Gris (ayuda a hacer el borde)
         self.Fr_help_compras = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
-        self.Fr_help_compras.place(relx=0.05, rely=0.43, relwidth=0.8, relheight=0.4)
+        self.Fr_help_compras.place(relx=0.05, rely=0.3, relwidth=0.8, relheight=0.54)
         
         #Fr_Blanco el principal
         self.Fr_blanco_compras = ctk.CTkFrame(self.Fr_help_compras,
@@ -74,6 +74,7 @@ class Compras(Clase_Plantilla):
 
         
         self.crear_combobox()
+        
 
 
         # Crear la tabla
@@ -96,7 +97,7 @@ class Compras(Clase_Plantilla):
             hover_color="blue",
             font=("Arial", 20),
             command=self.guardar_compra)
-        self.btn_guardar.place(relx=0.1, rely=0.85, relwidth=0.2, relheight=0.07)
+        self.btn_guardar.place(relx=0.1, rely=0.86, relwidth=0.2, relheight=0.07)
         
         #Boton cancelar
         self.btn_cancelar = ctk.CTkButton(
@@ -107,7 +108,7 @@ class Compras(Clase_Plantilla):
             font=("Arial", 20),
             command=self.Cancelar
         )
-        self.btn_cancelar.place(relx=0.32, rely=0.85, relwidth=0.18, relheight=0.07)
+        self.btn_cancelar.place(relx=0.32, rely=0.86, relwidth=0.18, relheight=0.07)
         
         self.btn_agregar = ctk.CTkButton(
             self.Fr_Principal,
@@ -117,7 +118,8 @@ class Compras(Clase_Plantilla):
             font=("Arial", 24),
             command=self.abrir_menu_agregar
         )
-        self.btn_agregar.place(relx=0.6, rely=0.35, relwidth=0.15, relheight=0.063)
+        self.btn_agregar.place(relx=0.62, rely=0.2, relwidth=0.15, relheight=0.063)
+
         
     def crear_combobox(self):
         query = ("""SELECT nombre FROM proveedores""")
@@ -159,7 +161,7 @@ class Compras(Clase_Plantilla):
                                       fg_color="white",
                                       font=("Arial", 25, "bold"),
                                       text="Total: $0.00")
-        self.lbl_total.place(relx=0.65, rely=0.85, relwidth=0.25,relheight=0.05)
+        self.lbl_total.place(relx=0.65, rely=0.86, relwidth=0.25,relheight=0.05)
         
         #label proveedor
         self.lbl_proveedor = ctk.CTkLabel(self.Fr_Principal,
@@ -169,13 +171,8 @@ class Compras(Clase_Plantilla):
                                       font=("Arial", 18, "bold"))
         self.lbl_proveedor.place(relx=0.05, rely=0.15,relwidth=0.1,relheight=0.05)
 
-        #label busqueda
-        self.lbl_busqueda = ctk.CTkLabel(self.Fr_Principal,
-                                      text="Busqueda de productos",
-                                      text_color="black",
-                                      fg_color="white",
-                                      font=("Arial", 18, "bold"))
-        self.lbl_busqueda.place(relx=0.05, rely=0.3,relwidth=0.22,relheight=0.05)
+
+
 
 #__________________________STRINGVARS___________________________________
         # Variable para guardar la opción seleccionada
@@ -183,14 +180,7 @@ class Compras(Clase_Plantilla):
         self.entrada_var_producto = ctk.StringVar()
 
 
-#__________________________ENTRYS___________________________________     
 
-        self.entry_busqueda = ctk.CTkEntry(self.Fr_Principal,
-                                           border_color="#eaeaea",
-                                           fg_color="#ffffff",
-                                           placeholder_text="Ingrese el nombre del producto")
-
-        self.entry_busqueda.place(relx=0.05,rely=0.35,relwidth=0.4,relheight=0.06)
 
 
         
@@ -209,6 +199,29 @@ class Compras(Clase_Plantilla):
         if self.cmb_proveedor.get() == "":
             self.cmb_proveedor.set("Seleccionar proveedor")
             self.cmb_proveedor.configure(fg_color="#f5f5f5", text_color="#999999")
+
+
+
+    def cargar_datos(self, datos):
+        """Limpia y carga la tabla con nuevos datos."""
+        for fila in self.tree.get_children():
+            self.tree.delete(fila)
+        for fila in datos:
+            self.tree.insert("", tk.END, values=fila)
+
+    def filtrar_tabla(self, event):
+        """Filtra los datos según lo que se escribe en el Entry."""
+        texto = self.entry_busqueda.get().lower()
+        datos_filtrados = []
+
+        for fila in self.datos_originales:
+            if texto in fila[0].lower():
+                datos_filtrados.append(fila)
+        
+        self.cargar_datos(datos_filtrados)
+
+
+
 
     def actualizar_combobox(self):
         query = ("""SELECT nombre FROM proveedores""")
@@ -273,8 +286,32 @@ class Compras(Clase_Plantilla):
         self.cancelar.place(x=180, y=230)
 
     def guardar_datos(self):
-        
+
         Producto = self.entry_producto.get()
+
+        self.lista_tree =[]
+        for fila in self.tree.get_children():
+            self.valores = self.tree.item (fila,"values")
+            self.li = {
+               
+                "producto": self.valores[0],
+                "cantidad":self.valores[1],
+                "precio": self.valores[2],
+                "tipo de pago": self.valores[3],
+                "pago": self.valores[4]
+                
+               
+                
+                }
+        
+            self.lista_tree.append(self.li)
+
+            if any(dato["producto"] == Producto for dato in self.lista_tree):
+                ms.showerror("Repetición", "El producto ya fue agregado.", parent=self.ventana_menu)
+                return
+                    
+                
+        
         
         if Producto != "" and Producto is not None:
             pass
@@ -315,15 +352,17 @@ class Compras(Clase_Plantilla):
             "Precio Unitario": self.entry_precio_unitario.get(),
             "Subtotal": cantidad*precio
         }
+
+
         if not all(datos.values()):
             # . values() te devuelve todos los valores y all devuelve True si ninguno de los valores está vacío
             ms.showwarning("Atención", "Por favor completa todos los campos.", parent=self.ventana_menu)
             return
 
         
+
         
 
-            
         
         if datos["Producto"] == "" or datos["Producto"].isspace():
             ms.showerror("Error", "El nombre no puede estar vacío ni contener solo espacios.", parent=self.ventana_menu)
@@ -341,6 +380,8 @@ class Compras(Clase_Plantilla):
             ms.showwarning("Atención", "Por favor, complete el campo Precio", parent=self.ventana_menu)
             return
         else:
+
+
             self.agregar_fila(datos)
 
 
@@ -402,6 +443,33 @@ class Compras(Clase_Plantilla):
                 # Sumar subtotal al total general
                 total_compras += float(fila_dict["Subtotal"])
 
+                query = ("""SELECT cantidad FROM productos_stock WHERE producto =  ?""")
+                data = (fila_dict["Producto"],)
+            
+                self.bd.cursor.execute(query,data)
+                resultado = self.bd.cursor.fetchone() 
+                
+                if resultado:
+                    cantidad_actual = resultado[0]
+                    nueva_cantidad = cantidad_actual + int(fila_dict["Cantidad"])
+
+                    self.bd.cursor.execute("UPDATE productos_stock SET cantidad = ? WHERE producto = ?", 
+                               (nueva_cantidad, fila_dict["Producto"]))
+                else:
+                    self.bd.cursor.execute("""
+                    INSERT INTO productos_stock(producto, categoria,  cantidad, precio_unitario,subtotal)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (
+                    
+                    fila_dict["Producto"],
+                    fila_dict["Categoria"],
+                    fila_dict["Cantidad"],
+                    fila_dict["Precio Unitario"],
+                    fila_dict["Subtotal"]
+                  
+                ))
+
+
                 # Insertar producto
                 self.bd.cursor.execute("""
                     INSERT INTO compras_proveedor(proveedor_id, producto, categoria, cantidad, precio_unitario, subtotal, fecha)
@@ -415,18 +483,7 @@ class Compras(Clase_Plantilla):
                     fila_dict["Subtotal"],
                     fecha_actual
                 ))
-                self.bd.cursor.execute("""
-                    INSERT INTO productos_stock(producto, categoria,  cantidad, precio_unitario,subtotal)
-                    VALUES (?, ?, ?, ?, ?)
-                """, (
-                    
-                    fila_dict["Producto"],
-                    fila_dict["Categoria"],
-                    fila_dict["Cantidad"],
-                    fila_dict["Precio Unitario"],
-                    fila_dict["Subtotal"]
-                  
-                ))
+                
                 
                 
                 self.bd.cursor.execute("""
@@ -460,11 +517,17 @@ class Compras(Clase_Plantilla):
             
             if Productos in GestorVentanas.instancias:
                 GestorVentanas.instancias[Productos].actualizar_tabla()
+                
             
             Registro_Compras = __import__("Archivo_Registro_Compras").Registro_Compras
 
             if Registro_Compras in GestorVentanas.instancias:
                 GestorVentanas.instancias[Registro_Compras].actualizar_tabla()
+
+            Clase_Ventana_Pantalla_Principal = __import__("Clase_Ventana_Pantalla_Principal").Ventana_Pantalla_Principal
+
+            if Clase_Ventana_Pantalla_Principal in GestorVentanas.instancias:
+                GestorVentanas.instancias[Clase_Ventana_Pantalla_Principal].actualizar_cantidades()
 
     
 

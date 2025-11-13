@@ -167,15 +167,15 @@ class Ventana_Login(VentanaBase):
         
         if user and not passwd:
             
-            ms.showerror("Error!", f"El casillero de {ph_contrasena} no puede estar vacio.")
+            ms.showerror("Error!", f"El casillero de {ph_contrasena} no puede estar vacio.",arent=self.ventana)
             
         if not user and passwd:
             
-            ms.showerror("Error!", f"El casillero de {ph_usuario} no puede estar vacio.")
+            ms.showerror("Error!", f"El casillero de {ph_usuario} no puede estar vacio.",parent=self.ventana)
 
         if not user and not passwd:
             
-            ms.showerror("Error!", "Ninguno de los casilleros no puede estar vacio.")
+            ms.showerror("Error!", "Ninguno de los casilleros no puede estar vacio.",parent=self.ventana)
             
         if user and passwd: # Si ninguno de los casilleron esta vacios.
             
@@ -189,7 +189,7 @@ class Ventana_Login(VentanaBase):
 
             if not usuario_login:
                 
-                ms.showerror("Error!", "Datos incorrectos o usuario no registrado.")
+                ms.showerror("Error!", "Datos incorrectos o usuario no registrado.",parent=self.ventana)
             
             if usuario_login:
                 

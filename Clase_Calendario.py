@@ -166,14 +166,14 @@ class Calendario(Clase_Plantilla):
         cantidad = self.bd.cursor.fetchone()[0]
 
         if cantidad > 0:
-            if ms.askyesno("Confirmar", f"¿Eliminar {cantidad} evento(s) del {fecha.strftime('%d/%m/%Y')}?"):
+            if ms.askyesno("Confirmar", f"¿Eliminar {cantidad} evento(s) del {fecha.strftime('%d/%m/%Y')}?",parent=self.ventana):
                 self.bd.cursor.execute("DELETE FROM eventos WHERE fecha = ?", (fecha_iso,))
                 self.bd.conexion.commit()
                 self.cal.calevent_remove('evento')
                 self.actualizar_tabla(fecha)
                 ms.showinfo("Listo", "Eventos eliminados.")
         else:
-            ms.showinfo("Info", "No hay eventos para esa fecha.")
+            ms.showinfo("Info", "No hay eventos para esa fecha.",parent=self.ventana)
 
 
             

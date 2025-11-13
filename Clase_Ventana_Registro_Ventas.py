@@ -132,7 +132,7 @@ class Registro_Ventas(Clase_Plantilla):
         try:
             venta_id = fila_id[0]
         except (IndexError, TypeError):
-            ms.showwarning("Aviso", "No se seleccionó ninguna compra.")
+            ms.showwarning("Aviso", "No se seleccionó ninguna compra.",parent=self.ventana)
             return
 
         # Crear ventana independiente
@@ -162,7 +162,7 @@ class Registro_Ventas(Clase_Plantilla):
         resultado = self.bd.cursor.fetchall()
 
         if not resultado:
-            ms.showinfo("Detalles", "No hay detalles para esta Venta.",)
+            ms.showinfo("Detalles", "No hay detalles para esta Venta.",parent=self.ventana_detalle)
             return
 
         for fila in resultado:

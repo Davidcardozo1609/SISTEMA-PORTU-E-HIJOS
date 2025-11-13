@@ -39,7 +39,7 @@ class Productos(Clase_Plantilla):
     
         #Fr_Gris (ayuda a hacer el borde)
         self.Fr_help_productos = ctk.CTkFrame(self.Fr_Principal,fg_color="#eaeaea")
-        self.Fr_help_productos.place(relx=0.05, rely=0.2, relwidth=0.9, relheight=0.58)
+        self.Fr_help_productos.place(relx=0.05, rely=0.2, relwidth=0.9, relheight=0.65)
         
         #Fr_Blanco el principal
         self.Fr_blanco_productos = ctk.CTkFrame(self.Fr_help_productos,
@@ -53,7 +53,7 @@ class Productos(Clase_Plantilla):
         self.crear_tabla(
             self.Fr_blanco_productos,  # frame donde irá la tabla
              columnas=["id", "Producto","Categoria","Cantidad","Precio_Unitario","Subtotal"],
-            con_acciones=True
+            con_acciones=False
 
         )
         
@@ -78,7 +78,6 @@ class Productos(Clase_Plantilla):
             # Suponiendo que tus columnas en Treeview son:
             # ["Producto","Categoria","Cantidad","Precio_Unitario","Subtotal","Editar","Eliminar"]
             valores = list(fila[0:6])  # Tomamos solo producto, categoria, cantidad, precio_unitario, subtotal
-            valores += ["Editar", "Eliminar"]  # Añadimos botones de acción
             self.tree.insert("", "end", values=valores)
                 
     

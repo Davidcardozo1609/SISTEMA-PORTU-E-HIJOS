@@ -81,18 +81,6 @@ class Ventana_Pantalla_Principal(Clase_Plantilla):
                                                    no_abrir_ventana=True
                                                    )
 
-        # En tu clase Ventana_Pantalla_Principal, después de conectarte a la BD:
-        try:
-            self.bd.cursor.execute("SELECT COUNT(DISTINCT categoria) FROM productos")
-            cantidad_categorias = self.bd.cursor.fetchone()[0] or 0
-        except:
-            cantidad_categorias = 0
-
-        
-
-
-        
-        
         #IMAGENES
         
         # clientes
@@ -172,7 +160,7 @@ class Ventana_Pantalla_Principal(Clase_Plantilla):
         self.Cli_Lbl_info = ctk.CTkLabel(self.Fr_Cli_info,
                                          image=self.logo_Cli_info_Rd,
                                          compound="left",
-                                         text=f"  {cantidad_categorias}",
+                                         text=f" 24",
                                          font=("Arial", 24),
                                          fg_color="white",
                                          text_color="black")
@@ -381,10 +369,30 @@ class Ventana_Pantalla_Principal(Clase_Plantilla):
         self.prov_Lbl_info.configure(text=f"   {self.cntd_prov}")
 
     
+    def actualizar_cantidad_categorias(self):
+        try:
+            self.bd.cursor.execute("SELECT COUNT(DISTINCT categoria) FROM productos_stock")
+            cantidad_categorias = self.bd.cursor.fetchone()[0] or 0
+            self.ctg_Lbl_info.configure(text= f"   {cantidad_categorias}")
+        except:
+            cantidad_categorias = 0
+
+    def actualizar_cantidad_productos(self):
+        try:
+            self.bd.cursor.execute("SELECT COUNT(DISTINCT producto) FROM productos_stock")
+            cantidad_productos = self.bd.cursor.fetchone()[0] or 0
+            self.prod_Lbl_info.configure(text= f"   {cantidad_productos}")
+        except:
+            cantidad_productos = 0
+
+    
     def actualizar_cantidades(self):
 
         self.actualizar_cantidad_clientes()
         self.actualizar_cantidad_proveedores()
+        self.actualizar_cantidad_categorias()
+        self.actualizar_cantidad_productos()
+        self.mostrar_grafico_barras()
             
         
 """class Plantilla:

@@ -178,24 +178,7 @@ class Clase_Plantilla():
         self.Guardar_Bn.pack(fill="x",padx=15,pady=5)
         
         
-        self.Ajustes_Bn= ctk.CTkButton(self.Fr_costado,
-                                   text=" Ajustes",
-                                   fg_color="#0d3139",
-                                   image=self.logo_ajustes_tk,
-                                   compound="left",
-                                   anchor="w",
-                                   text_color="white",
-                                   font=FONT_BTNS_MENU,
-                                   command=lambda: self.ir_a_pantalla_x(
-                                   __import__("Ajustes").Ventana_Ajustes, 
 
-                                   master=self.ventana,
-                                   ventana_padre=self,
-                                   ventana_login=self.ventana_login,
-                                   usuario_actual=self.usuario_actual,
-                                   parent_app=None))
-        
-        self.Ajustes_Bn.pack(fill="x",padx=15,pady=5)
         
         
         

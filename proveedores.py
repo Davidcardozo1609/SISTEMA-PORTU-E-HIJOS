@@ -36,14 +36,14 @@ class Proveedores(Clase_Plantilla):
         
         
         self.Fr_opciones = ctk.CTkFrame(self.Fr_Principal,
-                            fg_color="black",
+                            fg_color="white",
                             corner_radius=20)
         
-        self.Fr_opciones.place(relx=0.2,rely=0.3,relwidth=0.6,relheight=0.4)
+        self.Fr_opciones.place(relx=0,rely=0.2,relwidth=0.6,relheight=0.4)
         
         #ENTRY  PROVEEDOR 
         self.proveedores_entry = ctk.CTkEntry(self.Fr_opciones,
-                                              fg_color="white",
+                                              fg_color="#EBE9F1",
                                               text_color="black",
                                               validate="key",
                                               validatecommand=self.limitar_letras_espacios)
@@ -53,7 +53,7 @@ class Proveedores(Clase_Plantilla):
         
         #ENTRY TELEFONO
         self.telefono_entry = ctk.CTkEntry (self.Fr_opciones,
-                                            fg_color="white",
+                                            fg_color="#EBE9F1",
                                             text_color="black",
                                             validate="key",
                                             validatecommand=self.limitar_numeros)
@@ -62,7 +62,7 @@ class Proveedores(Clase_Plantilla):
         
         #ENTRY DIRECCION
         self.direccion_entry = ctk.CTkEntry (self.Fr_opciones,
-                                             fg_color="white",
+                                             fg_color="#EBE9F1",
                                              text_color="black",
                                              validate="key",
                                              validatecommand=self.limitar_a_numeros_letra)
